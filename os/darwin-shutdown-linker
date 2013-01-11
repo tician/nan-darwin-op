@@ -1,0 +1,4 @@
+#! /bin/sh
+
+/darwin/os/shutdown-sound
+

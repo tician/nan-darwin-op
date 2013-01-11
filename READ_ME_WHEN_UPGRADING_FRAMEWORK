@@ -1,0 +1,45 @@
+Please, let's keep things neat and easily upgradeable.
+
+When you upgrade:
+	1) Move _all_ of the contents of the current framework version ("Data",
+		"Framework", "Linux", ".svn" and "ReleaseNote.txt") to a folder
+		named with that framework's verison ("v1.4.0", "v1.5.0", etc.).
+		This folder will likely already exist with a copy of that verison's
+		zip file within it.
+	2) Download the new framework and create a new folder using the framework's
+		version as its name ("v1.6.0", etc.) and move the zip to that folder.
+	3) Extract the contents of that zip file to the "/darwin" folder
+		("/darwin/Data", "/darwin/Framework", etc.)
+	4) Copy your project's source code for that new version to a project folder
+		in the "/darwin/Linux/project" folder.
+
+Upgrading servo firmware:
+	1) Upgrade the framework and install as above.
+	2) Open a terminal and enter:
+		a) "cd /darwin/Linux/project/firmware_installer/"
+		b) "make clean && make"
+		c) "sudo ./firmware_installer"
+			1) type in password if prompted ("111111")
+			2) when prompted type "1" for upgrading CM-730 first
+			3) when prompted press the reset button on the DARwIn-OP
+			4) wait for it to print out "success" and "Terminated program"
+		d) "sudo ./firmware_installer"
+			1) type in password if prompted ("111111")
+			2) when prompted type "2" for upgrading MX-28T's
+			3) when prompted press the reset button on the DARwIn-OP
+			4) wait for it to run through the list of servos to upgrade
+				(now is a good opportunity to visit the vending machine)
+			5) verify all servos were upgraded successfully.  You will see
+				many lines reading "Reset ID:N...Success", where N is the
+				servo ID.  It it failed, check the servo cables and
+				repeat step "d"
+
+
+User projects
+	TellDarwin has a text file located in "/usr/local/bin" named "td"
+		This file allow the user to call TellDarwin from any location
+		 via the command "td".  If you change the path of the project
+		 folder, do not forget to upgrade the file or you will get a
+		 "file not found"/"no executable" error.
+		As of 2012/06/05, this is looking for:
+			"/darwin/Linux/project/TellDarwin1.2/TellDarwin"

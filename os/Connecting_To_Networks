@@ -1,0 +1,28 @@
+It is very likely you will want to connect to a wireless network.  If you 
+want to use NetworkManager, then run the 'x11vnc.sh' script on the
+DARwIn-OP and then execute the two commands listed later in the init script.
+This will open up a fluxbox session where you can use the nm-connection-editor
+GUI to create as many connections as you want easily and hopefully without
+interference between network devices (there have been a few times where the 
+DARwIn-OP would get stuck during boot waiting for a network connection).
+Right-click anywhere to open the menu and select 'Applications->Terminal
+Emulators->Xterm' to open a terminal and run 'nm-connection-editor'.
+
+After a connection has been created with the gui, connecting with the
+command-line tool is simply:
+>sudo nmcli con list
+which will output all available and existing connections.
+To connect, enter:
+>sudo nmcli con up id CONNECTION_ID
+where CONNECTION_ID is the name of the connection to use.
+
+nm-tools and nmcli will produce errors if used over ssh without being
+preceeded by 'sudo'.
+
+
+All else fails, use the above gui method to disable autoconnection for
+each connection on the device.  This should allow
+'/etc/network/interfaces' to override Network Manager's access to
+the device (will probably cause problems with not being able to use
+two interfaces eth0 and wlan0 simultaneously, if you do not already
+have that problem).

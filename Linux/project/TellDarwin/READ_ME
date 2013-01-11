@@ -1,0 +1,47 @@
+TellDarwin
+Written by Michael Krzyzaniak
+(A Music Composition Major)
+at the University of Georgia
+Ideas for Creative Exploration (ICE)
+Summer, 2011
+krzyzani@uga.edu
+
+INSTRUCTIONS FOR COMPILATION
+
+TellDarwin uses the ROBOTIS framework v.1.5, which can be obtained at 
+
+http://sourceforge.net/projects/darwinop/
+
+TellDarwin also uses the ALSA (Advanced Linux Sound Architecture) user-land library, which must be installed before TellDarwin can be compiled. ALSA can be installed with:
+
+sudo apt-get install libasound2-dev 
+
+Then move the folder containing this file and all of its contents to /darwin/Linux/project/
+
+and enter
+
+make
+
+If that does not work then use the documentation in doc/ to get more help.
+
+CHANGE LOG
+
+v 1.1 12-15-2011 
+  added support for disabling servos
+  added support for sending commands to OS
+  
+v 2.0 06-22-2012 
+  ported to ROBOTIS framework version 1.5, without backwards compatibility
+  N.B. YOU MUST UPGRADE TO DYNAMIXEL FIRMWARE V30 WHEN UPGRADING TO ROBOTIS' FRAMEWORK 1.5
+  added support for audio from USB microphone
+  added "body" to access all servos at once
+  increased range of several servos
+  fixed a number of minor bugs
+  added support for ROBOTIS gripper arms
+  added support for foot pressure sensors
+  servo errors and warnings now cleared when enabling servos
+  MAX lists now understood
+  can now control walk balance, period and 'enable' (to control head and arms while robot is walking)
+  can now read sensors while robot is walking
+  
+  

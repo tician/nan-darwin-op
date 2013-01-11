@@ -1,0 +1,43 @@
+Do the servos work?
+	-Yes.
+		Is the damage cosmetic or structural?
+			-Cosmetic.
+				
+			-Structural
+				Send an email to arrange to bring in the DARwIn-OP to get
+				 it fixed.
+	-Kinda.
+		Does the servo horn rotate by hand when it should not?
+			You may have sheared off the output spline.
+		Does the entire bot suddenly go limp?
+			There may be a power issue.
+				Are you on battery power?
+					Is the battery charged?
+					How old is the battery (how badly abused)?
+				Are you on AC power?
+					Is the power supply adequate (12V-5A minumum)?
+					Is the barrel connector snug?
+		Do any servos suddenly stop responding and/or go limp, but not the
+		  entire bot?
+			Probably a loose wire (the cable protection in the butt often pulls
+				the connectors out).
+			Still not responding?
+				Does the servo light its LED when first powered on?
+					Does it show up on the dynamixel bus?
+					Is servo 1 flaking out a bit, too?
+						The servo may have had its ID reset to '1' during a low
+							voltage reset.
+			Email for more.
+	-No.
+		Can the joint/servo be moved/rotated by hand when not powered?
+			-Yes.
+				Does the servo click/crunch when moving?
+					-Yes.
+						Likely a broken gear.  Send an email to arrange to
+						 bring in the DARwIn-OP to get it fixed.
+					-No.
+						Did you check the wires and connectors?
+			-No.
+				Likely a broken motor.  There is still one spare MX-28T as of
+				 2012/06/05.  Send an email to arrange to bring in the 
+				 DARwIn-OP to get it fixed.

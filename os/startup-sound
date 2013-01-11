@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# This script gets called by '/etc/rc.local' at startup.
+#   '/darwin/os/rc.local' is copied to '/etc/rc.local' during setup
+
+
+/usr/bin/mpg321 "/darwin/Data/Tim_Minchin_The_Pope_Song.mp3"
+
+# ZeebZob
+# espeak -ven-us+f3 -a 25 -s 130 "see you later meatbag."
+
+# Damdeok
+# espeak -ven-us+m1 -a 25 -s 130 "see you later meatbag."
+
+# Darfo
+# espeak -vit+m3 -a 25 -s 130 "gud bay mit bhag."
+# espeak -vit+m3 -a 25 -s 130 "aym redi whenever you ar"
+
