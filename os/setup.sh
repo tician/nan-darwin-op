@@ -1,13 +1,13 @@
 #!/bin/sh
 
-apt-get update
+aptitude update
 
-apt-get upgrade
+aptitude upgrade
 
 # Install missing software
-apt-get install g++ make libjpeg8-dev libncurses5-dev madplay vorbis-tools alsa-base alsa-utils libasound2-dev openssh-blacklist openssh-blacklist-extra network-manager xvfb fluxbox x11vnc espeak
+aptitude install g++ make libjpeg8-dev libncurses5-dev madplay vorbis-tools alsa-base alsa-utils libasound2-dev openssh-blacklist openssh-blacklist-extra network-manager xvfb fluxbox x11vnc espeak
 
-exit
+#exit
 
 # Compile and create shortcut to TellDarwin MAX interface
 cd /darwin/Linux/project/TellDarwin
