@@ -4,10 +4,11 @@
 #   'darwin-shutdown-linker' is copied to '/etc/init.d/darwin-shutdown' during
 #     setup, which is sym-linked into rc0.d and rc6.d as 'K18shutdownscript'
 
-/usr/bin/madplay "/Data/mp3/byebyte.mp3"
+# /usr/bin/madplay "/Data/mp3/byebyte.mp3"
 
 # ZeebZob
-# espeak -ven-us+f3 -a 25 -s 130 "see you later meatbag."
+# espeak -ven+f3 -a 50 -s 130 "bye bye"
+espeak -ven+f3 -a 50 -s 130 "nighty night"
 
 # Damdeok
 # espeak -ven-us+m1 -a 25 -s 130 "see you later meatbag."
