@@ -11,6 +11,7 @@
 #
 # By default this script does nothing.
 
+sleep 5
 /darwin/os/startup-sound
 
 exit 0

@@ -4,9 +4,10 @@
 #   '/darwin/os/rc.local' is copied to '/etc/rc.local' during setup
 
 
-/usr/bin/madplay "/darwin/Data/Wow.mp3"
+#/usr/bin/madplay "/darwin/Data/Wow.mp3"
 
 # ZeebZob
+espeak -ven+f3 -s 130 "I'm ready whenever you are."
 # espeak -ven-us+f3 -a 25 -s 130 "see you later meatbag."
 
 # Damdeok
