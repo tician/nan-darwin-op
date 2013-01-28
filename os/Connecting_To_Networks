@@ -1,6 +1,7 @@
 It is very likely you will want to connect to a wireless network.  If you 
 want to use NetworkManager, then run the 'x11vnc.sh' script on the
-DARwIn-OP and then execute the two commands listed later in the init script.
+DARwIn-OP.  On a different computer connected to the DARwIn-OP via ethernet
+cable, execute the two commands listed later in the init script.
 This will open up a fluxbox session where you can use the nm-connection-editor
 GUI to create as many connections as you want easily and hopefully without
 interference between network devices (there have been a few times where the 
