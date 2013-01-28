@@ -13,6 +13,15 @@ When you upgrade:
 	4) Copy your project's source code for that new version to a project folder
 		in the "/darwin/Linux/project" folder.
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DO NOT UPGRADE SERVO FIRMEWARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+As of v1.5.0 of the framework, the MX-28 firmware is older than the version shipped on new
+servos and the firmware installed by RoboPlus during calibration.  Installing the old
+firmware will wipe the calibration settings and potentially damage a servo if the funky offset
+is not caught quickly enough.  Servo #18 is the worst affected, but there are others.
+
+
 Upgrading servo firmware:
 	1) Upgrade the framework and install as above.
 	2) Open a terminal and enter:
