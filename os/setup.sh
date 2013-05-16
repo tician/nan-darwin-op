@@ -20,7 +20,12 @@ cp /darwin/os/rc.local /etc/rc.local
 
 # apply shutdown sound
 cp /darwin/os/darwin-shutdown-linker /etc/init.d/darwin-shutdown
-ln -s /etc/init.d/darwin-shutdown /etc/rc0.d/K18shutdownscript
-ln -s /etc/init.d/darwin-shutdown /etc/rc6.d/K18shutdownscript
 
+#ln -s /etc/init.d/darwin-shutdown /etc/rc0.d/K18shutdownscript
+cd /etc/rc0.d/
+ln -s ../init.d/darwin-shutdown ./K18shutdownscript
+
+#ln -s /etc/init.d/darwin-shutdown /etc/rc6.d/K18shutdownscript
+cd /etc/rc6.d/
+ln -s ../init.d/darwin-shutdown ./K18shutdownscript
 
