@@ -42,10 +42,10 @@ const float minAngle[] =
   -79 ,  //ID_L_ANKLE_PITCH   
   -37 ,  //ID_R_ANKLE_ROLL    
   -57 ,  //ID_L_ANKLE_ROLL    
-  -120 ,  //ID_HEAD_PAN
-  -22  , //ID_HEAD_TILT       
-  0,    //ID_R_HAND
-  0,    //ID_L_HAND
+  -120,  //ID_HEAD_PAN
+  -22 ,  //ID_HEAD_TILT       
+  -90 ,  //ID_R_HAND
+  -90 ,  //ID_L_HAND
   0,    //ID_R_WRIST_YAW
   0,    //ID_L_WRIST_YAW
 };
@@ -72,9 +72,9 @@ const float maxAngle[] =
   57 ,  //ID_R_ANKLE_ROLL    
   37 ,  //ID_L_ANKLE_ROLL    
   120,  //ID_HEAD_PAN
-  58,  //ID_HEAD_TILT
-  180,  //ID_R_HAND
-  180,  //ID_L_HAND
+  58 ,  //ID_HEAD_TILT
+  20 ,  //ID_R_HAND
+  20 ,  //ID_L_HAND
   180,  //ID_R_WRIST_YAW
   180,  //ID_L_WRIST_YAW
 };
@@ -131,6 +131,11 @@ bool Performer::Initialize()
   motionTimer = new LinuxMotionTimer(MotionManager::GetInstance());
   //LinuxMotionTimer::Initialize(MotionManager::GetInstance());
   motionTimer->Stop();
+
+  minIni* ini = new minIni("/darwin/Data/config.ini");
+  Walking::GetInstance()->LoadINISettings(ini);
+  MotionManager::GetInstance()->LoadINISettings(ini);
+
   MotionManager::GetInstance()->SetEnable(false);
   
   return true;
@@ -179,7 +184,7 @@ int Performer::servoExists(int ID)
 int Performer::willInterefereWithWalking(int ID)
 {
   int result = false;
-    if((ID >= 1) && (ID <= 20))
+    if((ID >= 1) && (ID <= JointData::NUMBER_OF_SERVOS))
       result = (isWalking && MotionStatus::m_CurrentJoints.GetEnable(ID));
   return result;
 }
@@ -596,12 +601,22 @@ void   Performer::SetWalkingVelocityX   (float  value)
   if(value > 23) value = 23; 
   if(value < -23 ) value = -23;
 
+  /* No, standard convention in robotics:
+       +X is forward
+       +Y is left
+       +Z is up
+  */
   Walking::GetInstance()->Y_MOVE_AMPLITUDE = (double)value; 
 }
 
 void  Performer::GetWalkingVelocityX   (float* value)
 {
   /* they mistakenly defined X as Y */
+  /* No, standard convention in robotics:
+       +X is forward
+       +Y is left
+       +Z is up
+  */
   *value = (float)Walking::GetInstance()->Y_MOVE_AMPLITUDE;
 }
 
@@ -610,6 +625,11 @@ void   Performer::SetWalkingVelocityY   (float  value)
   if(value > 40) value = 40; 
   if(value < 5 ) value =  5;
   /* they mistakenly defined Y as Z */
+  /* No, standard convention in robotics:
+       +X is forward
+       +Y is left
+       +Z is up
+  */
   //printf("Walking Y SET\n");
   Walking::GetInstance()->Z_MOVE_AMPLITUDE = (double)value; 
 }
@@ -617,6 +637,11 @@ void   Performer::SetWalkingVelocityY   (float  value)
 void   Performer::GetWalkingVelocityY   (float* value)
 {
   /* they mistakenly defined Y as Z */
+  /* No, standard convention in robotics:
+       +X is forward
+       +Y is left
+       +Z is up
+  */
   *value = (float)Walking::GetInstance()->Z_MOVE_AMPLITUDE;
 }
 
@@ -625,13 +650,23 @@ void   Performer::SetWalkingVelocityZ   (float  value)
   if(value > 23) value = 23; 
   if(value < -23 ) value =  -23;
   /* they mistakenly defined Z as X */
+  /* No, standard convention in robotics:
+       +X is forward
+       +Y is left
+       +Z is up
+  */
   //printf("Walking Z SET\n");
-  Walking::GetInstance()->X_MOVE_AMPLITUDE = (double)value; 
+  Walking::GetInstance()->X_MOVE_AMPLITUDE = (double)value;
 }
 
 void   Performer::GetWalkingVelocityZ   (float* value)
 {
   /* they mistakenly defined Z as X */
+  /* No, standard convention in robotics:
+       +X is forward
+       +Y is left
+       +Z is up
+  */
   *value = (float)Walking::GetInstance()->X_MOVE_AMPLITUDE;
 }
 
@@ -670,15 +705,19 @@ void Performer::GetWalkingEnable(float* value, int* numValues)
 void Performer::SetWalkingEnable(bool head, bool rightArm, bool leftArm)
 {
   int i, enable; 
-  for(i=1; i<=20; i++)
+  for(i=1; i<=JointData::NUMBER_OF_SERVOS; i++)
     {
       if(i<=6)
         {
           if(i%2) enable = rightArm;
           else    enable = leftArm;
         }
-       else if (i >= 19)
+       else if ( (i == JointData::ID_HEAD_PAN) || (i == JointData::ID_HEAD_TILT) )
          enable = head;
+       else if (i == JointData::ID_R_GRIPPER)
+         enable = rightArm
+       else if (i == JointData::ID_L_GRIPPER)
+         enable = leftArm
        else
          enable = true;
       MotionStatus::m_CurrentJoints.SetEnable(i, enable);
