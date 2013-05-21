@@ -137,7 +137,7 @@ bool Performer::Initialize()
   MotionManager::GetInstance()->LoadINISettings(ini);
 
   MotionManager::GetInstance()->SetEnable(false);
-  
+
   return true;
   /////////////////////////////////////////////////////////////////////
 }
@@ -720,9 +720,9 @@ void Performer::SetWalkingEnable(bool head, bool rightArm, bool leftArm)
          enable = leftArm;
        else
          enable = true;
-//      MotionStatus::m_CurrentJoints.SetEnable(i, enable);
-      Walking::GetInstance()->m_Joint.SetEnable(i, enable);
+      MotionStatus::m_CurrentJoints.SetEnable(i, enable);
     }
+
 }
 
 int Performer::GetFSR (FSRID_t ID, float value[4], int numSamples)
