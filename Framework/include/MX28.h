@@ -10,6 +10,8 @@
 
 //#define MX28_1024
 
+#define CHANGING_TEMPERATURE_LIMIT
+
 namespace Robot
 {
 	class MX28
@@ -34,6 +36,10 @@ namespace Robot
 		static const double RATIO_ANGLE2VALUE = 11.378; // 4096 / 360
 
 		static const int PARAM_BYTES = 7;
+#endif
+
+#ifdef CHANGING_TEMPERATURE_LIMIT
+        static const int CUSTOM_TEMPERATURE_LIMIT = 55;
 #endif
 
         static int GetMirrorValue(int value)		{ return MAX_VALUE + 1 - value; }

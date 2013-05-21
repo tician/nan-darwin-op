@@ -57,12 +57,20 @@ bool MotionManager::Initialize(CM730 *cm730)
 			MotionStatus::m_CurrentJoints.SetValue(id, value);
 			MotionStatus::m_CurrentJoints.SetEnable(id, true);
 
+#ifdef CHANGING_TEMPERATURE_LIMIT
+            m_CM730->WriteByte(id, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::CUSTOM_TEMPERATURE_LIMIT, &error);
+#endif
+
 			if(DEBUG_PRINT == true)
 				fprintf(stderr, "[%d] Success\n", value);
 		}
 		else
 		{
 			MotionStatus::m_CurrentJoints.SetEnable(id, false);
+
+#ifdef CHANGING_TEMPERATURE_LIMIT
+            m_CM730->WriteByte(id, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::CUSTOM_TEMPERATURE_LIMIT, &error);
+#endif
 
 			if(DEBUG_PRINT == true)
 				fprintf(stderr, " Fail\n");
