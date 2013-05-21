@@ -184,7 +184,7 @@ int Performer::servoExists(int ID)
 int Performer::willInterefereWithWalking(int ID)
 {
   int result = false;
-    if((ID >= 1) && (ID <= JointData::NUMBER_OF_SERVOS))
+    if((ID >= 1) && (ID <= JointData::NUMBER_OF_JOINTS))
       result = (isWalking && MotionStatus::m_CurrentJoints.GetEnable(ID));
   return result;
 }
@@ -705,7 +705,7 @@ void Performer::GetWalkingEnable(float* value, int* numValues)
 void Performer::SetWalkingEnable(bool head, bool rightArm, bool leftArm)
 {
   int i, enable; 
-  for(i=1; i<=JointData::NUMBER_OF_SERVOS; i++)
+  for(i=1; i<=JointData::NUMBER_OF_JOINTS; i++)
     {
       if(i<=6)
         {
@@ -715,12 +715,13 @@ void Performer::SetWalkingEnable(bool head, bool rightArm, bool leftArm)
        else if ( (i == JointData::ID_HEAD_PAN) || (i == JointData::ID_HEAD_TILT) )
          enable = head;
        else if (i == JointData::ID_R_GRIPPER)
-         enable = rightArm
+         enable = rightArm;
        else if (i == JointData::ID_L_GRIPPER)
-         enable = leftArm
+         enable = leftArm;
        else
          enable = true;
-      MotionStatus::m_CurrentJoints.SetEnable(i, enable);
+//      MotionStatus::m_CurrentJoints.SetEnable(i, enable);
+      Walking::GetInstance()->m_Joint.SetEnable(i, enable);
     }
 }
 
