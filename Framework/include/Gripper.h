@@ -53,7 +53,8 @@ namespace Robot
 		double GetTorqueLimit()			{ return _torque; }
 		double GetSpeedLimit()			{ return _speed; }
 		
-		double GetTorque();
+		double GetTorqueNow();
+		double GetSpeedNow();
 
 		double SetTorqueLimit(double torque);
 		double SetSpeedLimit(double speed);

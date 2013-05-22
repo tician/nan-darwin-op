@@ -117,9 +117,18 @@ void Gripper::SaveINISettings(minIni* ini, const std::string &section)
 
 double Gripper::GetTorqueNow()
 {
-	MotionStatus::m_JointStatus
+	int tempy = MotionStatus::m_JointStatus.GetTorqueNow(_id);
+	if ( (tempy >= 0) && (tempy <= 1023) )
+		return (tempy/1023.0);
 
 	return -1.0;
+}
+
+double Gripper::GetSpeedNow()
+{
+	int tempy = MotionStatus::m_JointStatus.GetSpeedNow(_id);
+
+	return (tempy/1023.0);
 }
 
 double Gripper::SetTorqueLimit(double torque)
