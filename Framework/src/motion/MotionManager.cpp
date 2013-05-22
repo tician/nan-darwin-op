@@ -301,6 +301,12 @@ void MotionManager::Process()
                         MotionStatus::m_CurrentJoints.SetPGain(id, (*i)->m_Joint.GetPGain(id));
                         MotionStatus::m_CurrentJoints.SetIGain(id, (*i)->m_Joint.GetIGain(id));
                         MotionStatus::m_CurrentJoints.SetDGain(id, (*i)->m_Joint.GetDGain(id));
+
+#ifdef GRIPPER_EXPERIMENTAL
+	/// Add speed and torque control?
+                        MotionStatus::m_CurrentJoints.SetSpeedLim(id, (*i)->m_Joint.GetSpeedLim(id));
+                        MotionStatus::m_CurrentJoints.SetTorqueLim(id, (*i)->m_Joint.GetTorqueLim(id));
+#endif
                     }
                 }
             }
@@ -309,6 +315,13 @@ void MotionManager::Process()
         int param[JointData::NUMBER_OF_JOINTS * MX28::PARAM_BYTES];
         int n = 0;
         int joint_num = 0;
+
+#ifdef GRIPPER_EXPERIMENTAL
+        int param_spd[JointData::NUMBER_OF_JOINTS * 2], param_trq[JointData::NUMBER_OF_JOINTS * 2];
+        int m = 0, M = 0;
+        int spd_num = 0, trq_num = 0;
+#endif
+
         for(int id=JointData::ID_R_SHOULDER_PITCH; id<JointData::NUMBER_OF_JOINTS; id++)
         {
             if(MotionStatus::m_CurrentJoints.GetEnable(id) == true)
@@ -326,6 +339,24 @@ void MotionManager::Process()
                 param[n++] = CM730::GetLowByte(MotionStatus::m_CurrentJoints.GetValue(id) + m_Offset[id]);
                 param[n++] = CM730::GetHighByte(MotionStatus::m_CurrentJoints.GetValue(id) + m_Offset[id]);
                 joint_num++;
+
+#ifdef GRIPPER_EXPERIMENTAL
+				int extras = 0;
+                if ( (extras=MotionStatus::m_CurrentJoints.GetSpeedLim(id)) > JointData::SPEED_DEFAULT )
+                {
+                    param_spd[m++] = id;
+                    param_spd[m++] = CM730::GetLowByte(extras);
+                    param_spd[m++] = CM730::GetHighByte(extras);
+                    spd_num++;
+                }
+                if ( (extras=MotionStatus::m_CurrentJoints.GetTorqueLim(id)) > JointData::TORQUE_DEFAULT )
+                {
+                    param_trq[M++] = id;
+                    param_trq[M++] = CM730::GetLowByte(extras);
+                    param_trq[M++] = CM730::GetHighByte(extras);
+                    trq_num++;
+                }
+#endif
             }
 
             if(DEBUG_PRINT == true)
@@ -337,6 +368,12 @@ void MotionManager::Process()
             m_CM730->SyncWrite(MX28::P_CW_COMPLIANCE_SLOPE, MX28::PARAM_BYTES, joint_num, param);
 #else
             m_CM730->SyncWrite(MX28::P_D_GAIN, MX28::PARAM_BYTES, joint_num, param);
+#endif
+#ifdef GRIPPER_EXPERIMENTAL
+        if(spd_num > 0)
+            m_CM730->SyncWrite(MX28::P_MOVING_SPEED_L, 2, spd_num, param_spd);
+        if(trq_num > 0)
+            m_CM730->SyncWrite(MX28::P_TORQUE_LIMIT_L, 2, trq_num, param_trq);
 #endif
     }
 
@@ -434,13 +471,13 @@ int MotionManager::CheckServoExistance(void)
     int count = 0;
     for(int id = 1; id < JointData::NUMBER_OF_JOINTS; id++)
     {
-        if (m_CM730->Ping(id, 0)==SUCCESS)
+        if (m_CM730->Ping(id, 0)==CM730::SUCCESS)
         {
-            MotionStatus::m_JointStatus->SetExists(id, true);
+            MotionStatus::m_JointStatus.SetExists(id, true);
             count++;
         }
         else
-            MotionStatus::m_JointStatus->SetExists(id, false);
+            MotionStatus::m_JointStatus.SetExists(id, false);
     }
     return count;
 }

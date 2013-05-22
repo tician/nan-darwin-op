@@ -64,6 +64,24 @@ namespace Robot
 		    D_GAIN_DEFAULT      = 0
 		};
 
+#ifdef GRIPPER_EXPERIMENTAL
+		enum
+		{
+		    SPEED_DEFAULT       = -1,
+		    SPEED_LOW           = 200,
+		    SPEED_MID           = 512,
+		    SPEED_MAX           = 1023
+		};
+
+		enum
+		{
+		    TORQUE_DEFAULT      = -1,
+		    TORQUE_LOW          = 200,
+		    TORQUE_MID          = 512,
+		    TORQUE_MAX          = 1023
+		};
+#endif
+
 	private:		
 
 	protected:
@@ -75,6 +93,11 @@ namespace Robot
 		int m_PGain[NUMBER_OF_JOINTS];
         int m_IGain[NUMBER_OF_JOINTS];
         int m_DGain[NUMBER_OF_JOINTS];
+
+#ifdef GRIPPER_EXPERIMENTAL
+        int m_SpeedLim[NUMBER_OF_JOINTS];
+        int m_TorqueLim[NUMBER_OF_JOINTS];
+#endif
 
 	public:
 		JointData();
@@ -135,6 +158,14 @@ namespace Robot
         int  GetIGain(int id)            { return m_IGain[id]; }
         void SetDGain(int id, int dgain) { m_DGain[id] = dgain; }
         int  GetDGain(int id)            { return m_DGain[id]; }
+
+#ifdef GRIPPER_EXPERIMENTAL
+        /// Set/Get Speed and PWM limits
+        void SetSpeedLim(int id, int speed) { m_SpeedLim[id] = speed; }
+        int  GetSpeedLim(int id)            { return m_SpeedLim[id]; }
+        void SetTorqueLim(int id, int torque) { m_TorqueLim[id] = torque; }
+        int  GetTorqueLim(int id)            { return m_TorqueLim[id]; }
+#endif
 	};
 
 	class JointFeedback
