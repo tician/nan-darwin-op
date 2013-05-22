@@ -193,6 +193,18 @@ namespace Robot
 		bool GetExists(int id)					{ return m_Exists[id]; }
 		void SetErrors(int id, int err)		{ m_Errors[id] = err; }
 		int  GetErrors(int id)					{ return m_Errors[id]; }
+
+		JointFeedback()
+		{
+			for (int id=1; id<JointData::NUMBER_OF_JOINTS; id++)
+			{
+				m_SpeedNow[id] = 0;
+				m_TorqueNow[id] = 0;
+				m_Temperature[id] = 0;
+				m_Exists[id] = false;
+				m_Errors[id] = 0;
+			}
+		}
 	};
 }
 
