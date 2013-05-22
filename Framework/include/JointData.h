@@ -11,6 +11,9 @@
 #define BOT_HAS_HANDS
 //#define BOT_HAS_WRISTS
 
+#include "AXM.h"
+#include "MX28.h"
+
 namespace Robot
 {	
 	class JointData  
@@ -171,33 +174,22 @@ namespace Robot
 	class JointFeedback
 	{
 	protected:
-		int m_SpeedNow[JointData::NUMBER_OF_JOINTS];
-		int m_TorqueNow[JointData::NUMBER_OF_JOINTS];
+		int		m_Model[JointData::NUMBER_OF_JOINTS];
 
-		int m_Temperature[JointData::NUMBER_OF_JOINTS];
+		double	m_PoseNow[JointData::NUMBER_OF_JOINTS];
+		int		m_SpeedNow[JointData::NUMBER_OF_JOINTS];
+		int		m_TorqueNow[JointData::NUMBER_OF_JOINTS];
 
-		int m_Model[JointData::NUMBER_OF_JOINTS];
-		int m_Errors[JointData::NUMBER_OF_JOINTS];
+		int		m_Temperature[JointData::NUMBER_OF_JOINTS];
+
+		int		m_Errors[JointData::NUMBER_OF_JOINTS];
 
 	public:
-		/// Set/Get Speed and PWM values
-		void SetSpeedNow(int id, int speed)	{ m_SpeedNow[id] = speed; }
-		int  GetSpeedNow(int id)				{ return m_SpeedNow[id]; }
-		void SetTorqueNow(int id, int torque)	{ m_TorqueNow[id] = torque; }
-		int  GetTorqueNow(int id)				{ return m_TorqueNow[id]; }
-
-		void SetTemperature(int id, int tempy)	{ m_Temperature[id] = tempy; }
-		int  GetTemperature(int id)				{ return m_Temperature[id]; }
-
-		void SetModel(int id, int moe)			{ m_Model[id] = moe; }
-		int GetModel(int id)					{ return m_Model[id]; }
-		void SetErrors(int id, int err)		{ m_Errors[id] = err; }
-		int  GetErrors(int id)					{ return m_Errors[id]; }
-
 		JointFeedback()
 		{
 			for (int id=1; id<JointData::NUMBER_OF_JOINTS; id++)
 			{
+				m_PoseNow[id] = 0.0;
 				m_SpeedNow[id] = 0;
 				m_TorqueNow[id] = 0;
 				m_Temperature[id] = 0;
@@ -205,6 +197,33 @@ namespace Robot
 				m_Errors[id] = 0;
 			}
 		}
+
+		/// Set/Get Pose, Speed, and PWM values
+		void	SetPoseNow(int id, double pos)
+		{
+			if (	(m_Model[id]==DXL_MODELS::AX12) ||
+					(m_Model[id]==DXL_MODELS::AX18) ||
+					(m_Model[id]==DXL_MODELS::AX12W) )
+				m_PoseNow[id] = AXM::Value2Angle(pos);
+			else if ( (m_Model[id]==DXL_MODELS::MX28) )
+				m_PoseNow[id] = MX28::Value2Angle(pos);
+			else
+				m_PoseNow[id] = pos/(1.0);
+		}
+		double	GetPoseNow(int id)					{ return m_PoseNow[id]; }
+		void	SetSpeedNow(int id, int speed)		{ m_SpeedNow[id] = speed; }
+		int		GetSpeedNow(int id)					{ return m_SpeedNow[id]; }
+		void	SetTorqueNow(int id, int torque)	{ m_TorqueNow[id] = torque; }
+		int		GetTorqueNow(int id)				{ return m_TorqueNow[id]; }
+
+		void	SetTemperature(int id, int tempy)	{ m_Temperature[id] = tempy; }
+		int		GetTemperature(int id)				{ return m_Temperature[id]; }
+
+		void	SetModel(int id, int moe)			{ m_Model[id] = moe; }
+		int		GetModel(int id)					{ return m_Model[id]; }
+		void	SetErrors(int id, int err)			{ m_Errors[id] = err; }
+		int		GetErrors(int id)					{ return m_Errors[id]; }
+
 	};
 }
 

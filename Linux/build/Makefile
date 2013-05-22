@@ -29,6 +29,7 @@ OBJS =  ../../Framework/src/CM730.o     	\
         ../../Framework/src/motion/MotionManager.o  \
         ../../Framework/src/motion/MotionStatus.o   \
         ../../Framework/src/motion/modules/Action.o \
+        ../../Framework/src/motion/modules/Gripper.o \
         ../../Framework/src/motion/modules/Head.o   \
         ../../Framework/src/motion/modules/Walking.o\
         ../../Framework/src/vision/BallFollower.o   \

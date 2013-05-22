@@ -8,6 +8,7 @@
 #ifndef _CM_730_H_
 #define _CM_730_H_
 
+#include "AXM.h"
 #include "MX28.h"
 
 #define MAXNUM_TXPARAM      (256)

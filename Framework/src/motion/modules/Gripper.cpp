@@ -118,17 +118,35 @@ void Gripper::SaveINISettings(minIni* ini, const std::string &section)
 double Gripper::GetTorqueNow()
 {
 	int tempy = MotionStatus::m_JointStatus.GetTorqueNow(_id);
-	if ( (tempy >= 0) && (tempy <= 1023) )
-		return (tempy/1023.0);
+	if ( (tempy >= 0) && (tempy < (1<<11)) )
+	{
+	    int mag = (tempy&(0x01FF));
+	    int dir = (tempy&(1<<10));
 
-	return -1.0;
+		if (dir > 0)	// CCW Load (closing: positive angle rotation)
+			return (mag/1023.0)
+		else			// CW Load (opening: negative angle rotation)
+			return -(mag/1023.0);
+	}
+
+	return -2.0;
 }
 
 double Gripper::GetSpeedNow()
 {
 	int tempy = MotionStatus::m_JointStatus.GetSpeedNow(_id);
+	if ( (tempy >= 0) && (tempy < (1<<11)) )
+	{
+	    int mag = (tempy&(0x01FF));
+	    int dir = (tempy&(1<<10));
 
-	return (tempy/1023.0);
+		if (dir > 0)	// CCW Load (closing: positive angle rotation)
+			return (mag/1023.0)
+		else			// CW Load (opening: negative angle rotation)
+			return -(mag/1023.0);
+	}
+
+	return -2.0;
 }
 
 double Gripper::SetTorqueLimit(double torque)
