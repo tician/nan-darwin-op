@@ -471,13 +471,14 @@ int MotionManager::CheckServoExistance(void)
     int count = 0;
     for(int id = 1; id < JointData::NUMBER_OF_JOINTS; id++)
     {
-        if (m_CM730->Ping(id, 0)==CM730::SUCCESS)
+        int moe = 0;
+        if (m_CM730->ReadWord(id, 0, &moe, 0)==CM730::SUCCESS)
         {
-            MotionStatus::m_JointStatus.SetExists(id, true);
+            MotionStatus::m_JointStatus.SetModel(id, moe);
             count++;
         }
         else
-            MotionStatus::m_JointStatus.SetExists(id, false);
+            MotionStatus::m_JointStatus.SetExists(id, 0);
     }
     return count;
 }

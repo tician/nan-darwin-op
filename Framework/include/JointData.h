@@ -176,8 +176,8 @@ namespace Robot
 
 		int m_Temperature[JointData::NUMBER_OF_JOINTS];
 
-		bool m_Exists[JointData::NUMBER_OF_JOINTS];
-		int  m_Errors[JointData::NUMBER_OF_JOINTS];
+		int m_Model[JointData::NUMBER_OF_JOINTS];
+		int m_Errors[JointData::NUMBER_OF_JOINTS];
 
 	public:
 		/// Set/Get Speed and PWM values
@@ -189,8 +189,8 @@ namespace Robot
 		void SetTemperature(int id, int tempy)	{ m_Temperature[id] = tempy; }
 		int  GetTemperature(int id)				{ return m_Temperature[id]; }
 
-		void SetExists(int id, bool exi)		{ m_Exists[id] = exi; }
-		bool GetExists(int id)					{ return m_Exists[id]; }
+		void SetModel(int id, int moe)			{ m_Model[id] = moe; }
+		int GetModel(int id)					{ return m_Model[id]; }
 		void SetErrors(int id, int err)		{ m_Errors[id] = err; }
 		int  GetErrors(int id)					{ return m_Errors[id]; }
 
@@ -201,7 +201,7 @@ namespace Robot
 				m_SpeedNow[id] = 0;
 				m_TorqueNow[id] = 0;
 				m_Temperature[id] = 0;
-				m_Exists[id] = false;
+				m_Model[id] = 0;
 				m_Errors[id] = 0;
 			}
 		}
