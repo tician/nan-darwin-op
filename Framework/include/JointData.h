@@ -8,6 +8,8 @@
 #ifndef _JOINT_DATA_H_
 #define _JOINT_DATA_H_
 
+#define BOT_HAS_HANDS
+//#define BOT_HAS_WRISTS
 
 namespace Robot
 {	
@@ -36,8 +38,14 @@ namespace Robot
 			ID_L_ANKLE_ROLL         = 18,
 			ID_HEAD_PAN             = 19,
 			ID_HEAD_TILT            = 20,
+#ifdef BOT_HAS_HANDS
 			ID_R_GRIPPER            = 21,
 			ID_L_GRIPPER            = 22,
+#endif
+#ifdef BOT_HAS_WRISTS
+			ID_R_WRIST              = 23,
+			ID_L_WRIST              = 24,
+#endif
 			NUMBER_OF_JOINTS
 		};
 
@@ -92,6 +100,18 @@ namespace Robot
         void SetEnableBodyWithoutHead(bool enable, bool exclusive);
 		void SetEnableBody(bool enable);
         void SetEnableBody(bool enable, bool exclusive);
+#ifdef BOT_HAS_HANDS
+		void SetEnableBodyWithoutHands(bool enable);
+		void SetEnableBodyWithoutHands(bool enable, bool exclusive);
+		void SetEnableHands(bool enable);
+		void SetEnableHands(bool enable, bool exclusive);
+#endif
+#ifdef BOT_HAS_WRISTS
+		void SetEnableBodyWithoutWrists(bool enable);
+		void SetEnableBodyWithoutWrists(bool enable, bool exclusive);
+		void SetEnableWrists(bool enable);
+		void SetEnableWrists(bool enable, bool exclusive);
+#endif
 		bool GetEnable(int id);
 
 		void SetValue(int id, int value);

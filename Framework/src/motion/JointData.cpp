@@ -152,6 +152,54 @@ void JointData::SetEnableBody(bool enable, bool exclusive)
         SetEnable(id, enable, exclusive);
 }
 
+#ifdef BOT_HAS_HANDS
+void JointData::SetEnableBodyWithoutHands(bool enable)
+{
+    SetEnableBodyWithoutHands(enable, false);
+}
+
+void JointData::SetEnableBodyWithoutHands(bool enable, bool exclusive)
+{
+    for(int id = 1; id < ID_R_GRIPPER; id++)
+        SetEnable(id, enable, exclusive);
+}
+
+void JointData::SetEnableHands(bool enable)
+{
+    SetEnableHands(enable, false);
+}
+
+void JointData::SetEnableHands(bool enable, bool exclusive)
+{
+    SetEnable(ID_R_GRIPPER, enable, exclusive);
+    SetEnable(ID_L_GRIPPER, enable, exclusive);
+}
+#endif
+
+#ifdef BOT_HAS_WRISTS
+void JointData::SetEnableBodyWithoutWrists(bool enable)
+{
+    SetEnableBodyWithoutWrists(enable, false);
+}
+
+void JointData::SetEnableBodyWithoutWrists(bool enable, bool exclusive)
+{
+    for(int id = 1; id < ID_R_WRIST; id++)
+        SetEnable(id, enable, exclusive);
+}
+
+void JointData::SetEnableWrists(bool enable)
+{
+    SetEnableWrists(enable, false);
+}
+
+void JointData::SetEnableWrists(bool enable, bool exclusive)
+{
+    SetEnable(ID_R_WRIST, enable, exclusive);
+    SetEnable(ID_L_WRIST, enable, exclusive);
+}
+#endif
+
 bool JointData::GetEnable(int id)
 {
     return m_Enable[id];
