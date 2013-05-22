@@ -36,6 +36,8 @@ namespace Robot
 
 		static int BUTTON;
 		static int FALLEN;
+
+        static JointFeedback m_JointStatus;
 	};
 }
 

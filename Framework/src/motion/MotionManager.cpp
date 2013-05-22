@@ -77,6 +77,8 @@ bool MotionManager::Initialize(CM730 *cm730)
 		}
 	}
 
+	CheckServoExistance();
+
 	m_CalibrationStatus = 0;
 	m_FBGyroCenter = 512;
 	m_RLGyroCenter = 512;
@@ -112,6 +114,8 @@ bool MotionManager::Reinitialize()
 				fprintf(stderr, " Fail\n");
 		}
 	}
+
+	CheckServoExistance();
 
 	m_ProcessEnable = true;
 	return true;
@@ -354,6 +358,44 @@ void MotionManager::Process()
         m_LogFileStream << std::endl;
     }
 
+#ifdef BOT_HAS_HANDS
+    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_R_GRIPPER) == true)
+    {
+        MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
+        MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].error );
+    }
+
+    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_L_GRIPPER) == true)
+    {
+        MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
+        MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].error );
+    }
+#endif
+
+#ifdef BOT_HAS_WRISTS
+    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_R_WRIST) == true)
+    {
+        MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
+        MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].error );
+    }
+
+    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_L_WRIST) == true)
+    {
+        MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
+        MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].error );
+    }
+#endif
+
+
+
     if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
         MotionStatus::BUTTON = m_CM730->m_BulkReadData[CM730::ID_CM].ReadByte(CM730::P_BUTTON);
 
@@ -385,4 +427,20 @@ void MotionManager::SetJointDisable(int index)
         for(std::list<MotionModule*>::iterator i = m_Modules.begin(); i != m_Modules.end(); i++)
             (*i)->m_Joint.SetEnable(index, false);
     }
+}
+
+int MotionManager::CheckServoExistance(void)
+{
+    int count = 0;
+    for(int id = 1; id < JointData::NUMBER_OF_JOINTS; id++)
+    {
+        if (m_CM730->Ping(id, 0)==SUCCESS)
+        {
+            MotionStatus::m_JointStatus->SetExists(id, true);
+            count++;
+        }
+        else
+            MotionStatus::m_JointStatus->SetExists(id, false);
+    }
+    return count;
 }

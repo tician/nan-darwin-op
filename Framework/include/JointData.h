@@ -136,6 +136,33 @@ namespace Robot
         void SetDGain(int id, int dgain) { m_DGain[id] = dgain; }
         int  GetDGain(int id)            { return m_DGain[id]; }
 	};
+
+	class JointFeedback
+	{
+	protected:
+		int m_SpeedNow[JointData::NUMBER_OF_JOINTS];
+		int m_TorqueNow[JointData::NUMBER_OF_JOINTS];
+
+		int m_Temperature[JointData::NUMBER_OF_JOINTS];
+
+		bool m_Exists[JointData::NUMBER_OF_JOINTS];
+		int  m_Errors[JointData::NUMBER_OF_JOINTS];
+
+	public:
+		/// Set/Get Speed and PWM values
+		void SetSpeedNow(int id, int speed)	{ m_SpeedNow[id] = speed; }
+		int  GetSpeedNow(int id)				{ return m_SpeedNow[id]; }
+		void SetTorqueNow(int id, int torque)	{ m_TorqueNow[id] = torque; }
+		int  GetTorqueNow(int id)				{ return m_TorqueNow[id]; }
+
+		void SetTemperature(int id, int tempy)	{ m_Temperature[id] = tempy; }
+		int  GetTemperature(int id)				{ return m_Temperature[id]; }
+
+		void SetExists(int id, bool exi)		{ m_Exists[id] = exi; }
+		bool GetExists(int id)					{ return m_Exists[id]; }
+		void SetErrors(int id, int err)		{ m_Errors[id] = err; }
+		int  GetErrors(int id)					{ return m_Errors[id]; }
+	};
 }
 
 #endif

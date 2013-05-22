@@ -17,3 +17,6 @@ int MotionStatus::RL_ACCEL(0);
 
 int MotionStatus::BUTTON(0);
 int MotionStatus::FALLEN(0);
+
+JointFeedback MotionStatus::m_JointStatus;
+

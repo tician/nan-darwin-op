@@ -70,6 +70,8 @@ namespace Robot
         void LoadINISettings(minIni* ini, const std::string &section);
         void SaveINISettings(minIni* ini);
         void SaveINISettings(minIni* ini, const std::string &section);
+
+        int CheckServoExistance(void);
 	};
 }
 

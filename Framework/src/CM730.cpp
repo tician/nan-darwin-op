@@ -413,6 +413,42 @@ void CM730::MakeBulkReadPacket()
 //        }
 //    }
 
+#ifdef BOT_HAS_HANDS
+    if(Ping(JointData::ID_R_GRIPPER, 0) == SUCCESS)
+    {
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_GRIPPER;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
+        number++;
+    }
+
+    if(Ping(JointData::ID_L_GRIPPER, 0) == SUCCESS)
+    {
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_GRIPPER;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
+        number++;
+    }
+#endif
+
+#ifdef BOT_HAS_WRISTS
+    if(Ping(JointData::ID_R_WRIST, 0) == SUCCESS)
+    {
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_WRIST;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
+        number++;
+    }
+
+    if(Ping(JointData::ID_L_WRIST, 0) == SUCCESS)
+    {
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_WRIST;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
+        number++;
+    }
+#endif
+
     if(Ping(FSR::ID_L_FSR, 0) == SUCCESS)
     {
         m_BulkReadTxPacket[PARAMETER+3*number+1] = 10;               // length
