@@ -29,7 +29,7 @@ void StatusCheck::Check(CM730 &cm730)
         Walking::GetInstance()->Stop();
         while(Walking::GetInstance()->IsRunning() == 1) usleep(8000);
 
-        Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+        Action::GetInstance()->m_Joint.SetEnableBodyWithoutHands(true, true);
 
         if(MotionStatus::FALLEN == FORWARD)
             Action::GetInstance()->Start(10);   // FORWARD GETUP
@@ -58,7 +58,7 @@ void StatusCheck::Check(CM730 &cm730)
             LinuxActionScript::m_stop = 1;
 
             Walking::GetInstance()->Stop();
-            Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+            Action::GetInstance()->m_Joint.SetEnableBodyWithoutHands(true, true);
 
             while(Action::GetInstance()->Start(15) == false) usleep(8000);
             while(Action::GetInstance()->IsRunning() == true) usleep(8000);
@@ -107,7 +107,7 @@ void StatusCheck::Check(CM730 &cm730)
                 m_is_started = 1;
                 LinuxActionScript::PlayMP3("../../../Data/mp3/Start soccer demonstration.mp3");
 
-                Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+                Action::GetInstance()->m_Joint.SetEnableBodyWithoutHands(true, true);
 
                 Action::GetInstance()->Start(9);
                 while(Action::GetInstance()->IsRunning() == true) usleep(8000);
@@ -139,7 +139,7 @@ void StatusCheck::Check(CM730 &cm730)
                 LinuxActionScript::PlayMP3("../../../Data/mp3/Start motion demonstration.mp3");
 
                 // Joint Enable..
-                Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+                Action::GetInstance()->m_Joint.SetEnableBodyWithoutHands(true, true);
 
                 Action::GetInstance()->Start(1);
                 while(Action::GetInstance()->IsRunning() == true) usleep(8000);
@@ -152,7 +152,7 @@ void StatusCheck::Check(CM730 &cm730)
                 LinuxActionScript::PlayMP3("../../../Data/mp3/Start vision processing demonstration.mp3");
 
                 // Joint Enable...
-                Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+                Action::GetInstance()->m_Joint.SetEnableBodyWithoutHands(true, true);
 
                 Action::GetInstance()->Start(1);
                 while(Action::GetInstance()->IsRunning() == true) usleep(8000);

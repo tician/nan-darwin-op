@@ -140,7 +140,7 @@ int main(void)
     else
         exit(0);
 
-    Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+    Action::GetInstance()->m_Joint.SetEnableBodyWithoutHands(true, true);
     MotionManager::GetInstance()->SetEnable(true);
 
     cm730.WriteByte(CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
