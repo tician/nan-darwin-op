@@ -396,7 +396,7 @@ void MotionManager::Process()
     }
 
 #ifdef BOT_HAS_HANDS
-    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_R_GRIPPER) == true)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER) > 0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -404,7 +404,7 @@ void MotionManager::Process()
         MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].error );
     }
 
-    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_L_GRIPPER) == true)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER) > 0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -414,7 +414,7 @@ void MotionManager::Process()
 #endif
 
 #ifdef BOT_HAS_WRISTS
-    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_R_WRIST) == true)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST) > 0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -422,7 +422,7 @@ void MotionManager::Process()
         MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].error );
     }
 
-    if(MotionStatus::m_JointStatus.GetExists(JointData::ID_L_WRIST) == true)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST) > 0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -478,7 +478,7 @@ int MotionManager::CheckServoExistance(void)
             count++;
         }
         else
-            MotionStatus::m_JointStatus.SetExists(id, 0);
+            MotionStatus::m_JointStatus.SetModel(id, 0);
     }
     return count;
 }

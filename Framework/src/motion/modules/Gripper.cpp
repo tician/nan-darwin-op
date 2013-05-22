@@ -4,6 +4,7 @@
 #include "CM730.h"
 #include "MotionStatus.h"
 #include "Gripper.h"
+#include <math.h>
 
 using namespace Robot;
 
@@ -43,7 +44,7 @@ void Gripper::Bump()
 		if (_torque > 1.0)
 			_torque = 1.0;
 		if (m_Joint.GetEnable(_id) == true)
-		    m_Joint.SetTorqueLim( id, (int)(1023*_torque) );
+		    m_Joint.SetTorqueLim( _id, (int)(1023*_torque) );
 	}
 	if (_d_speed)
 	{
@@ -52,7 +53,7 @@ void Gripper::Bump()
 		if (_speed > 1.0)
 			_speed = 1.0;
 		if(m_Joint.GetEnable(_id) == true)
-		    m_Joint.SetSpeedLim( id, (int)(1023*_speed) );
+		    m_Joint.SetSpeedLim( _id, (int)(1023*_speed) );
 	}
 	_d_torque = false;
 	_d_speed = false;
@@ -124,7 +125,7 @@ double Gripper::GetTorqueNow()
 	    int dir = (tempy&(1<<10));
 
 		if (dir > 0)	// CCW Load (closing: positive angle rotation)
-			return (mag/1023.0)
+			return (mag/1023.0);
 		else			// CW Load (opening: negative angle rotation)
 			return -(mag/1023.0);
 	}
@@ -141,7 +142,7 @@ double Gripper::GetSpeedNow()
 	    int dir = (tempy&(1<<10));
 
 		if (dir > 0)	// CCW Load (closing: positive angle rotation)
-			return (mag/1023.0)
+			return (mag/1023.0);
 		else			// CW Load (opening: negative angle rotation)
 			return -(mag/1023.0);
 	}
@@ -151,7 +152,7 @@ double Gripper::GetSpeedNow()
 
 double Gripper::SetTorqueLimit(double torque)
 {
-	if ( abs(_torque - torque) > CONTROL_RESOLUTION )
+	if ( fabs(_torque - torque) > CONTROL_RESOLUTION )
 	{
 		_torque = torque;
 		_d_torque = true;
@@ -163,7 +164,7 @@ double Gripper::SetTorqueLimit(double torque)
 
 double Gripper::SetSpeedLimit(double speed)
 {
-	if ( abs(_speed - speed) > CONTROL_RESOLUTION )
+	if ( fabs(_speed - speed) > CONTROL_RESOLUTION )
 	{
 		_speed = speed;
 		_d_speed = true;
@@ -216,7 +217,7 @@ double Gripper::MoveByAngle(double delta, double torque)
 {
 	_current += delta;
 	
-	if ( abs(_torque - torque) > CONTROL_RESOLUTION )
+	if ( fabs(_torque - torque) > CONTROL_RESOLUTION )
 	{
 		_torque = torque;
 		_d_torque = true;
@@ -237,7 +238,7 @@ void Gripper::MoveToAngle(double angle, double torque)
 {
 	_current = angle;
 	
-	if ( abs(_torque - torque) > CONTROL_RESOLUTION )
+	if ( fabs(_torque - torque) > CONTROL_RESOLUTION )
 	{
 		_torque = torque;
 		_d_torque = true;

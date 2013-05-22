@@ -24,10 +24,8 @@ JointData::JointData()
         m_IGain[i] = I_GAIN_DEFAULT;
         m_DGain[i] = D_GAIN_DEFAULT;
 
-#ifdef GRIPPER_EXPERIMENTAL
         m_SpeedLim[i] = SPEED_DEFAULT;
         m_TorqueLim[i] = TORQUE_DEFAULT;
-#endif
     }
 }
 
