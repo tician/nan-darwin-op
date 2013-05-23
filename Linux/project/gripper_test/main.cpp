@@ -55,12 +55,15 @@ int main(void)
     	std::cout << "Moving to neutral\n";
         Gripper::GetRight()->MoveToNeutral(.3);
         sleep(1);
+        std::cout << "\'Load\': " << Gripper::GetRight()->GetTorqueNow() << std::endl;
     	std::cout << "Moving to open\n";
         Gripper::GetRight()->MoveToOpen(1.0);
         sleep(1);
+        std::cout << "\'Load\': " << Gripper::GetRight()->GetTorqueNow() << std::endl;
     	std::cout << "Moving to closed\n";
         Gripper::GetRight()->MoveToClosed(.1);
         sleep(1);
+        std::cout << "\'Load\': " << Gripper::GetRight()->GetTorqueNow() << std::endl;
     }
 
     return 0;
