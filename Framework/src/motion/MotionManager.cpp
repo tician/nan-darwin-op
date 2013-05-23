@@ -188,8 +188,10 @@ void MotionManager::Process()
 
     m_IsRunning = true;
 
+    int BuRe_Res = m_CM730->BulkRead();
+
     // calibrate gyro sensor
-    if(m_CalibrationStatus == 0 || m_CalibrationStatus == -1)
+    if( (m_CalibrationStatus == 0 || m_CalibrationStatus == -1) && (BuRe_Res==CM730::SUCCESS) )
     {
         static int fb_gyro_array[GYRO_WINDOW_SIZE] = {512,};
         static int rl_gyro_array[GYRO_WINDOW_SIZE] = {512,};
@@ -249,7 +251,7 @@ void MotionManager::Process()
         }
     }
 
-    if(m_CalibrationStatus == 1 && m_Enabled == true)
+    if( (m_CalibrationStatus == 1 && m_Enabled == true) && (BuRe_Res==CM730::SUCCESS) )
     {
         static int fb_array[ACCEL_WINDOW_SIZE] = {512,};
         static int buf_idx = 0;
@@ -378,7 +380,7 @@ void MotionManager::Process()
     }
 
 //    m_CM730->BulkRead();
-    if (m_CM730->BulkRead() == CM730::SUCCESS)
+    if (BuRe_Res==CM730::SUCCESS)
     {
 
     if(m_IsLogging)
