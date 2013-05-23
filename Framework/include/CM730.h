@@ -22,7 +22,8 @@ namespace Robot
         int start_address;
         int length;
         int error;
-        unsigned char table[MX28::MAXNUM_ADDRESS];
+//        unsigned char table[MX28::MAXNUM_ADDRESS];
+        unsigned char table[100];
 
         BulkReadData();
         virtual ~BulkReadData() {}

@@ -27,6 +27,7 @@ int main(void)
 	//////////////////// Framework Initialize ////////////////////////////
 	LinuxCM730 linux_cm730(U2D_DEV_NAME);
 	CM730 cm730(&linux_cm730);
+//    cm730.DEBUG_PRINT = true;
 	if(MotionManager::GetInstance()->Initialize(&cm730) == false)
 	{
 		printf("Fail to initialize Motion Manager!\n");
