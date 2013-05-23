@@ -377,7 +377,9 @@ void MotionManager::Process()
 #endif
     }
 
-    m_CM730->BulkRead();
+//    m_CM730->BulkRead();
+    if (m_CM730->BulkRead() == CM730::SUCCESS)
+    {
 
     if(m_IsLogging)
     {
@@ -436,6 +438,7 @@ void MotionManager::Process()
     if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
         MotionStatus::BUTTON = m_CM730->m_BulkReadData[CM730::ID_CM].ReadByte(CM730::P_BUTTON);
 
+    }
     m_IsRunning = false;
 }
 
