@@ -232,6 +232,11 @@ void JointData::SetValue(int id, int value)
         m_Value[id] = value;
         m_Angle[id] = AXM::Value2Angle(value);
     }
+    else
+    {
+        m_Value[id] = 512;
+        m_Angle[id] = 0.0;
+    }
 
 }
 
@@ -263,6 +268,11 @@ void JointData::SetAngle(int id, double angle)
 
         m_Angle[id] = angle;
         m_Value[id] = AXM::Angle2Value(angle);
+    }
+    else
+    {
+        m_Angle[id] = 0.0;
+        m_Value[id] = 512;
     }
 }
 
