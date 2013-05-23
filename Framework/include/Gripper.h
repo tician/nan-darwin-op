@@ -36,6 +36,7 @@ namespace Robot
 		void Bump();
 
 	public:
+//  Methinks we got to use one instance per class or we get seg faults
 		static Gripper* GetRight()		{ return _right; }
 		static Gripper* GetLeft()		{ return _left; }
 
