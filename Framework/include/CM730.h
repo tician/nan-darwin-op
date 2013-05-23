@@ -23,7 +23,7 @@ namespace Robot
         int length;
         int error;
 //        unsigned char table[MX28::MAXNUM_ADDRESS];
-        unsigned char table[100];
+        unsigned char table[128];
 
         BulkReadData();
         virtual ~BulkReadData() {}

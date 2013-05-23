@@ -8,7 +8,6 @@
 
 #define U2D_DEV_NAME        "/dev/ttyUSB0"
 
-using namespace std;
 using namespace Robot;
 
 void change_current_dir()
@@ -27,7 +26,7 @@ int main(void)
 	//////////////////// Framework Initialize ////////////////////////////
 	LinuxCM730 linux_cm730(U2D_DEV_NAME);
 	CM730 cm730(&linux_cm730);
-    cm730.DEBUG_PRINT = true;
+//    cm730.DEBUG_PRINT = true;
 	if(MotionManager::GetInstance()->Initialize(&cm730) == false)
 	{
 		printf("Fail to initialize Motion Manager!\n");
@@ -37,8 +36,9 @@ int main(void)
     LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
     motion_timer->Start();
 
-	cout << "My ID is: " << Gripper::GetRight()->GetID() << endl;
-//	Gripper::GetRight()->Initialize();
+	std::cout << "My ID is: " << Gripper::GetRight()->GetID() << std::endl;
+	Gripper::GetRight()->Initialize();
+	sleep(2);
 
 	MotionStatus::m_CurrentJoints.SetEnableBody(false);
 	MotionStatus::m_CurrentJoints.SetEnable(JointData::ID_R_GRIPPER, true);
@@ -52,17 +52,14 @@ int main(void)
 
     while(1)
     {
-    	cout << "Moving to neutral\n";
-        Gripper::GetRight()->MoveToNeutral();
+    	std::cout << "Moving to neutral\n";
+        Gripper::GetRight()->MoveToNeutral(.3);
         sleep(1);
-    	cout << "Moving to open\n";
-        Gripper::GetRight()->MoveToOpen();
+    	std::cout << "Moving to open\n";
+        Gripper::GetRight()->MoveToOpen(1.0);
         sleep(1);
-    	cout << "Moving to neutral\n";
-        Gripper::GetRight()->MoveToNeutral();
-        sleep(1);
-    	cout << "Moving to closed\n";
-        Gripper::GetRight()->MoveToClosed();
+    	std::cout << "Moving to closed\n";
+        Gripper::GetRight()->MoveToClosed(.1);
         sleep(1);
     }
 

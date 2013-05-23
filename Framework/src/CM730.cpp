@@ -270,6 +270,8 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                     m_BulkReadData[_id].error = -1;
                 }
 
+                if(DEBUG_PRINT == true)
+                    fprintf(stderr, "\n");
                 while(1)
                 {
                     int i;
@@ -286,7 +288,7 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                         // Check checksum
                         unsigned char checksum = CalculateChecksum(rxpacket);
                         if(DEBUG_PRINT == true)
-                            fprintf(stderr, "CHK:%.2X\n", checksum);
+                            fprintf(stderr, "  CHK:%.2X\n", checksum);
 
                         if(rxpacket[LENGTH+rxpacket[LENGTH]] == checksum)
                         {
@@ -512,6 +514,16 @@ int CM730::BulkRead()
 
 int CM730::SyncWrite(int start_addr, int each_length, int number, int *pParam)
 {
+    if(DEBUG_PRINT == true)
+        fprintf(stderr, "Just called SyncWrite()\n");
+
+    if ((number * each_length)>MAXNUM_TXPARAM)
+    {
+//        if(DEBUG_PRINT == true)
+            fprintf(stderr, "Called SyncWrite() with too many parameters to fit in a single TX_Packet.\n");
+        return TX_FAIL;
+    }
+
 	unsigned char txpacket[MAXNUM_TXPARAM + 10] = {0, };
 	unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };
 	int n;
@@ -524,8 +536,8 @@ int CM730::SyncWrite(int start_addr, int each_length, int number, int *pParam)
         txpacket[PARAMETER + 2 + n]   = (unsigned char)pParam[n];
     txpacket[LENGTH]            = n + 4;
 
-	if(DEBUG_PRINT == true)
-	    fprintf(stderr, "Attempting SyncWrite()...\n");
+    if(DEBUG_PRINT == true)
+        fprintf(stderr, "Attempting SyncWrite()...\n");
 
     return TxRxPacket(txpacket, rxpacket, 0);
 }

@@ -11,6 +11,8 @@
 #include "MX28.h"
 #include "MotionManager.h"
 
+#define GRIPPER_EXPERIMENTAL
+
 using namespace Robot;
 
 MotionManager* MotionManager::m_UniqueInstance = new MotionManager();
@@ -189,6 +191,7 @@ void MotionManager::Process()
     m_IsRunning = true;
 
     int BuRe_Res = m_CM730->BulkRead();
+//    std::cout << "Bulk Read Result: " << BuRe_Res << std::endl;
 
     // calibrate gyro sensor
     if( (m_CalibrationStatus == 0 || m_CalibrationStatus == -1) && (BuRe_Res==CM730::SUCCESS) )
@@ -476,14 +479,18 @@ int MotionManager::CheckServoExistance(void)
     int count = 0;
     for(int id = 1; id < JointData::NUMBER_OF_JOINTS; id++)
     {
-        int moe = 0;
+        int moe = 0, error = 0;
         if (m_CM730->ReadWord(id, 0, &moe, 0)==CM730::SUCCESS)
         {
             MotionStatus::m_JointStatus.SetModel(id, moe);
+            std::cout << "Servo #" << id << " is model #" << moe << std::endl;
             count++;
         }
         else
+        {
             MotionStatus::m_JointStatus.SetModel(id, 0);
+            std::cout << "Servo #" << id << " :error: " << error << std::endl;
+        }
     }
     return count;
 }
