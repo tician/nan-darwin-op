@@ -16,6 +16,7 @@
 #include "JointData.h"
 #include "Action.h"
 #include "Walking.h"
+#include "Gripper.h"
 #include "Head.h"
 #include "Image.h"
 #include "ImgProcess.h"

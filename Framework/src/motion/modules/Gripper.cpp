@@ -35,8 +35,6 @@ Gripper::~Gripper()
 
 void Gripper::Bump()
 {
-	int error = 0;
-
 	if (_d_torque)
 	{
 		if (_torque < 0.0)
