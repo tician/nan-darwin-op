@@ -281,12 +281,12 @@ void MotionManager::Process()
 // If no module is actively controlling them and overriding their positions,
 //  then they default to 0[degrees]
 #ifdef BOT_HAS_HANDS
-        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_R_GRIPPER, 0);
-        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_L_GRIPPER, 0);
+        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_R_GRIPPER, 0.0);
+        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_L_GRIPPER, 0.0);
 #endif
 #ifdef BOT_HAS_WRISTS
-        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_R_WRIST, 0);
-        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_L_WRIST, 0);
+        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_R_WRIST, 0.0);
+        MotionStatus::m_CurrentJoints.SetAngle(JointData::ID_L_WRIST, 0.0);
 #endif
         if(m_Modules.size() != 0)
         {

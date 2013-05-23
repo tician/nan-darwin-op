@@ -45,6 +45,7 @@ int main(void)
 	MotionManager::GetInstance()->SetEnable(true);
 	/////////////////////////////////////////////////////////////////////
 
+	Gripper::GetRight()->m_Joint.SetEnableBody(false);
 	Gripper::GetRight()->m_Joint.SetEnable(JointData::ID_R_GRIPPER, true);
 
 	Gripper::GetRight()->m_Joint.SetPGain(JointData::ID_R_GRIPPER, 8);

@@ -160,7 +160,7 @@ int LinuxCM730::ReadPort(unsigned char* packet, int numPacket)
 
 void sem_wait_nointr(sem_t *sem)
 {
-    int sem_result, sem_count = 0;
+    int sem_result;//, sem_count = 0;
 	do {
 	    sem_result = sem_wait(sem);
     } while((sem_result == -1) && (errno == EINTR));

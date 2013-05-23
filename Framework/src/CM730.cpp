@@ -70,11 +70,17 @@ CM730::~CM730()
 
 int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority)
 {
+	if(DEBUG_PRINT == true)
+		fprintf(stderr, "Start Mutex Wait\n");
+
 	if(priority > 1)
 		m_Platform->LowPriorityWait();
 	if(priority > 0)
 		m_Platform->MidPriorityWait();
 	m_Platform->HighPriorityWait();
+
+	if(DEBUG_PRINT == true)
+		fprintf(stderr, "End Mutex Wait\n");
 
 	int res = TX_FAIL;
 	int length = txpacket[LENGTH] + 4;
@@ -369,11 +375,17 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
 		}
 	}
 
+	if(DEBUG_PRINT == true)
+		fprintf(stderr, "Start Mutex Release\n");
+
 	m_Platform->HighPriorityRelease();
     if(priority > 0)
         m_Platform->MidPriorityRelease();
     if(priority > 1)
         m_Platform->LowPriorityRelease();
+
+	if(DEBUG_PRINT == true)
+		fprintf(stderr, "End Mutex Release\n");
 
 	return res;
 }
@@ -485,7 +497,12 @@ int CM730::BulkRead()
     unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };
 
     if(m_BulkReadTxPacket[LENGTH] != 0)
+    {
+    	if(DEBUG_PRINT == true)
+    	    fprintf(stderr, "Attempting BulkRead()...\n");
+
         return TxRxPacket(m_BulkReadTxPacket, rxpacket, 0);
+    }
     else
     {
         MakeBulkReadPacket();
@@ -506,6 +523,9 @@ int CM730::SyncWrite(int start_addr, int each_length, int number, int *pParam)
     for(n = 0; n < (number * each_length); n++)
         txpacket[PARAMETER + 2 + n]   = (unsigned char)pParam[n];
     txpacket[LENGTH]            = n + 4;
+
+	if(DEBUG_PRINT == true)
+	    fprintf(stderr, "Attempting SyncWrite()...\n");
 
     return TxRxPacket(txpacket, rxpacket, 0);
 }
