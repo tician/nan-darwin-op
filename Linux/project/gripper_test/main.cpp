@@ -39,7 +39,7 @@ int main(void)
 
 	std::cout << "My ID is: " << Gripper::GetRight()->GetID() << std::endl;
 	Gripper::GetRight()->Initialize();
-	sleep(2);
+	sleep(5);
 //	std::cout << "My ID is: " << Gripper::GetLeft()->GetID() << std::endl;
 //	Gripper::GetLeft()->Initialize();
 //	sleep(2);
@@ -110,8 +110,8 @@ int main(void)
             usleep(100000);
         }
 */
-		Gripper::GetRight()->MoveToOpen();
-		sleep(5);
+//		Gripper::GetRight()->MoveToOpen();
+//		sleep(5);
 		Gripper::GetRight()->Squeeze(0.2);
 		sleep(5);
 		Gripper::GetRight()->Spread(0.3);
