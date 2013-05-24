@@ -91,20 +91,23 @@ int main(void)
         while(countChocula<15.0)
         {
             Gripper::GetRight()->MoveToAngle(countChocula);
-            countChocula += 10.0;
-            sleep(1);
+	        std::cout << "\'Load\': " << Gripper::GetRight()->GetTorqueNow() << std::endl;
+            countChocula += 1.0;
+            usleep(100000);
         }
         while(countChocula>-80.0)
         {
             Gripper::GetRight()->MoveToAngle(countChocula);
-            countChocula -= 10.0;
-            sleep(1);
+	        std::cout << "\'Load\': " << Gripper::GetRight()->GetTorqueNow() << std::endl;
+            countChocula -= 1.0;
+            usleep(100000);
         }
         while(countChocula<0.0)
         {
             Gripper::GetRight()->MoveToAngle(countChocula);
-            countChocula += 10.0;
-            sleep(1);
+	        std::cout << "\'Load\': " << Gripper::GetRight()->GetTorqueNow() << std::endl;
+            countChocula += 1.0;
+            usleep(100000);
         }
 
     }
