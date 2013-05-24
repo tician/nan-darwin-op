@@ -402,6 +402,7 @@ void MotionManager::Process()
     }
 
 #ifdef BOT_HAS_HANDS
+// FUCK YOU!!!!!!!!!!!!!!!!!!!!!!!!!
     if(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER)>0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
