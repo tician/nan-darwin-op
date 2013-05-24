@@ -114,7 +114,7 @@ int main(void)
 		sleep(5);
 		Gripper::GetRight()->Squeeze(0.2);
 		sleep(5);
-		Gripper::GetRight()->Spread(0.2);
+		Gripper::GetRight()->Spread(0.3);
 		sleep(5);
 
     }

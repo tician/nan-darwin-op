@@ -34,19 +34,10 @@ Gripper::~Gripper()
 
 void Gripper::Bump()
 {
-	if (_d_torque)
-	{
-		if (_torque < 0.0)
-			_torque *= -1.0;
-		if (_torque > 1.0)
-			_torque = 1.0;
-	    m_Joint.SetTorqueLim( _id, (int)(1023*_torque) );
-		_d_torque = false;
-	}
-	else
-	{
-	    m_Joint.SetTorqueLim( _id, JointData::TORQUE_DEFAULT );
-	}
+	if (_torque < 0.0)
+		_torque *= -1.0;
+	if (_torque > 1.0)
+		_torque = 1.0;
 
 	if (_closedLimit > _openLimit)
 	{
@@ -225,36 +216,44 @@ void Gripper::MoveToAngle(double angle, double torque)
 double Gripper::Squeeze(double torque)
 {
 	int overTorque = 0;
+	double tor = this->GetTorqueNow();
+	double torlim = (torque*1.0);
+	double tormov = (torque*1.2);
 	while ( (overTorque<100) && (_current<_closedLimit) )
 	{
-		MoveToAngle(_current+1.0, torque*1.2);
-		double tor = this->GetTorqueNow();
-        std::cout << "\'Load\': " << tor << std::endl;
-        if (tor > torque*1.1)
+		MoveToAngle(_current+1.0, tormov);
+		tor = this->GetTorqueNow();
+		fprintf(stderr, "\'Load\': %0.2f\n", tor);
+        if (tor > torlim)
         	overTorque++;
         else
         	overTorque = 0;
 
 		usleep(50000);
 	}
+	fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
 	return _current;
 }
 
 double Gripper::Spread(double torque)
 {
 	int overTorque = 0;
+	double tor = this->GetTorqueNow();
+	double torlim = (torque*-1.0);
+	double tormov = (torque*1.2);
 	while ( (overTorque<100) && (_current>_openLimit) )
 	{
-		MoveToAngle(_current-1.0, torque*1.2);
-		double tor = this->GetTorqueNow();
-        std::cout << "\'Load\': " << tor << std::endl;
-        if (tor > torque*-1.1)
+		MoveToAngle(_current-1.0, tormov);
+		tor = this->GetTorqueNow();
+		fprintf(stderr, "\'Load\': %0.2f\n", tor);
+        if (tor < torlim)
         	overTorque++;
         else
         	overTorque = 0;
 
 		usleep(50000);
 	}
+	fprintf(stderr, "Stopped spreading at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
 	return _current;
 }
 
@@ -267,11 +266,14 @@ void Gripper::Process()
 	{
 		m_Joint.SetAngle(_id, _current);
 
-//		if (_d_torque)
-//			m_Joint.SetTorqueLim(_id, _torque);
-//		else
-//			m_Joint.SetTorqueLim(_id, JointData::TORQUE_DEFAULT);
-
-//		_d_torque = false;
+		if (_d_torque)
+		{
+			m_Joint.SetTorqueLim( _id, (int)(1023*_torque) );
+			_d_torque = false;
+		}
+		else
+		{
+			m_Joint.SetTorqueLim( _id, JointData::TORQUE_DEFAULT );
+		}
 	}
 }

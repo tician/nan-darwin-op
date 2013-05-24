@@ -365,21 +365,21 @@ void MotionManager::Process()
 
     if(num_mx > 0)
     {
-	        std::cout << "MX SyncWrite Start\n";
+//	        std::cout << "MX SyncWrite Start\n";
 #ifdef MX28_1024
         m_CM730->SyncWrite(MX28::P_CW_COMPLIANCE_SLOPE, MX28::PARAM_BYTES, num_mx, param_mx);
 #else
         m_CM730->SyncWrite(MX28::P_D_GAIN, MX28::PARAM_BYTES, num_mx, param_mx);
 #endif
-	        std::cout << "MX SyncWrite Complete\n";
+//	        std::cout << "MX SyncWrite Complete\n";
     }
 
 #ifdef GRIPPER_EXPERIMENTAL
     if(num_trq > 0)
     {
-	        std::cout << "Torque SyncWrite Start\n";
+//	        std::cout << "Torque SyncWrite Start\n";
         m_CM730->SyncWrite(MX28::P_TORQUE_LIMIT_L, 3, num_trq, param_trq);
-	        std::cout << "Torque SyncWrite Complete\n";
+//	        std::cout << "Torque SyncWrite Complete\n";
     }
 #endif
 
@@ -401,43 +401,38 @@ void MotionManager::Process()
         m_LogFileStream << std::endl;
     }
 
-    int moe=0;
 #ifdef BOT_HAS_HANDS
-    moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER);
-    if(moe == 29)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER)>0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
-        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
         MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].error );
     }
 
-    moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER);
-    if(moe == 29)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER)>0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
-        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
         MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].error );
     }
 #endif
 
 #ifdef BOT_HAS_WRISTS
-    moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST);
-    if(moe == 29)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST)>0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
-        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
         MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].error );
     }
 
-    moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST);
-    if(moe == 29)
+    if(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST)>0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
-        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_TEMPERATURE) );
+        MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
         MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].error );
     }
 #endif
