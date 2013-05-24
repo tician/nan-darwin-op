@@ -22,8 +22,8 @@ namespace Robot
         int start_address;
         int length;
         int error;
-//        unsigned char table[MX28::MAXNUM_ADDRESS];
-        unsigned char table[128];
+        unsigned char table[MX28::MAXNUM_ADDRESS];
+//        unsigned char table[128];
 
         BulkReadData();
         virtual ~BulkReadData() {}
@@ -32,7 +32,7 @@ namespace Robot
         int ReadWord(int address);
 //        int ReadLength();
 //        int ReadError();
-		bool clone(BulkReadData*);
+//		bool clone(BulkReadData*);
     };
 
 	class PlatformCM730
@@ -173,7 +173,8 @@ namespace Robot
 
 	public:
 		bool DEBUG_PRINT;
-        BulkReadData m_BulkReadData[ID_BROADCAST];
+//        BulkReadData m_BulkReadData[ID_BROADCAST];
+        BulkReadData *m_BulkReadData;
 
 		CM730(PlatformCM730 *platform);
 		~CM730();

@@ -15,7 +15,7 @@ CXX = g++
 #CXXFLAGS += -O2 -DLINUX -Wall $(INCLUDE_DIRS)
 #CXXFLAGS += -O2 -DDEBUG -DLINUX -Wall $(INCLUDE_DIRS)
 CXXFLAGS += -O2 -ggdb -DLINUX -Wall -shared $(INCLUDE_DIRS)
-LFLAGS += -g -lpthread -lrt
+LFLAGS += -ggdb -lpthread -lrt
 
 OBJECTS =   main.o
 
