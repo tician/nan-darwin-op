@@ -12,9 +12,10 @@ TARGET = gripper_test
 INCLUDE_DIRS = -I../../include -I../../../Framework/include
 
 CXX = g++
-CXXFLAGS += -O2 -DLINUX -Wall $(INCLUDE_DIRS)
+#CXXFLAGS += -O2 -DLINUX -Wall $(INCLUDE_DIRS)
 #CXXFLAGS += -O2 -DDEBUG -DLINUX -Wall $(INCLUDE_DIRS)
-LFLAGS += -lpthread -lrt
+CXXFLAGS += -O2 -ggdb -DLINUX -Wall -shared $(INCLUDE_DIRS)
+LFLAGS += -g -lpthread -lrt
 
 OBJECTS =   main.o
 

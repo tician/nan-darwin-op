@@ -259,7 +259,7 @@ double Gripper::Squeeze(double torque)
 
 double Gripper::Spread(double torque)
 {
-	while ( (this->GetTorqueNow() > torque*1.1) && (_current>_openLimit) )
+	while ( (this->GetTorqueNow() > torque*-1.1) && (_current>_openLimit) )
 	{
 		MoveToAngle(_current-1.0, torque*1.2);
         std::cout << "\'Load\': " << this->GetTorqueNow() << std::endl;
