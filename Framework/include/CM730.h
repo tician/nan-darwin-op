@@ -8,7 +8,6 @@
 #ifndef _CM_730_H_
 #define _CM_730_H_
 
-#include "AXM.h"
 #include "MX28.h"
 
 #define MAXNUM_TXPARAM      (256)
@@ -23,16 +22,12 @@ namespace Robot
         int length;
         int error;
         unsigned char table[MX28::MAXNUM_ADDRESS];
-//        unsigned char table[128];
 
         BulkReadData();
         virtual ~BulkReadData() {}
 
         int ReadByte(int address);
         int ReadWord(int address);
-//        int ReadLength();
-//        int ReadError();
-//		bool clone(BulkReadData*);
     };
 
 	class PlatformCM730
@@ -169,12 +164,9 @@ namespace Robot
 		int TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority);
 		unsigned char CalculateChecksum(unsigned char *packet);
 
-		BulkReadData m_BuReDaBu[ID_BROADCAST];
-
 	public:
 		bool DEBUG_PRINT;
-//        BulkReadData m_BulkReadData[ID_BROADCAST];
-        BulkReadData *m_BulkReadData;
+        BulkReadData m_BulkReadData[ID_BROADCAST];
 
 		CM730(PlatformCM730 *platform);
 		~CM730();
@@ -207,6 +199,10 @@ namespace Robot
 		static int GetLowByte(int word);
 		static int GetHighByte(int word);
 		static int MakeColor(int red, int green, int blue);
+
+// ***   WEBOTS PART  *** //
+
+		void MakeBulkReadPacketWb();
 	};
 }
 

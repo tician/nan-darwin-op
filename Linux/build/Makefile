@@ -17,8 +17,10 @@ INCLUDE_DIRS = -I../include -I../../Framework/include
 
 #CXXFLAGS += -O2 -DLINUX -Wall -shared $(INCLUDE_DIRS)
 #CXXFLAGS += -O2 -DDEBUG -DLINUX -Wall -shared $(INCLUDE_DIRS)
-CXXFLAGS += -O2 -ggdb -DLINUX -Wall -shared $(INCLUDE_DIRS)
-LFLAGS += -ggdb -lpthread -ldl
+#CXXFLAGS += -O2 -ggdb -DLINUX -Wall -shared $(INCLUDE_DIRS)
+CXXFLAGS += -O0 -DLINUX -Wall -shared $(INCLUDE_DIRS)
+LFLAGS += -lpthread -ldl -lrt
+#LFLAGS += -ggdb -lpthread -ldl -lrt
 
 OBJS =  ../../Framework/src/CM730.o     	\
         ../../Framework/src/math/Matrix.o   \

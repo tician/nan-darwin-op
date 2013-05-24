@@ -40,35 +40,19 @@ BulkReadData::BulkReadData() :
 
 int BulkReadData::ReadByte(int address)
 {
-	int retval = 0;
     if(address >= start_address && address < (start_address + length))
-        retval = (int)table[address];
+        return (int)table[address];
 
-    return retval;
+    return 0;
 }
 
 int BulkReadData::ReadWord(int address)
 {
-	int retval = 0;
     if(address >= start_address && address < (start_address + length))
-        retval = CM730::MakeWord(table[address], table[address+1]);
+        return CM730::MakeWord(table[address], table[address+1]);
 
-    return retval;
+    return 0;
 }
-
-//bool BulkReadData::clone(BulkReadData *sink)
-//{
-//	if (length == 0)
-//		return false;
-//	
-//	sink->start_address = this->start_address;
-//	sink->length = this->length;
-//	sink->error = this->error;
-//	for (int i=start_address; i<(start_address+length); i++)
-//		sink->table[i] = this->table[i];
-//	return true;
-//}
-
 
 
 CM730::CM730(PlatformCM730 *platform)
@@ -76,10 +60,7 @@ CM730::CM730(PlatformCM730 *platform)
 	m_Platform = platform;
 	DEBUG_PRINT = false;
 	for(int i = 0; i < ID_BROADCAST; i++)
-	{
-		m_BuReDaBu[i] = BulkReadData();
-	}
-	m_BulkReadData = m_BuReDaBu;
+	    m_BulkReadData[i] = BulkReadData();
 }
 
 CM730::~CM730()
@@ -89,17 +70,11 @@ CM730::~CM730()
 
 int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority)
 {
-	if(DEBUG_PRINT == true)
-		fprintf(stderr, "Start Mutex Wait\n");
-
 	if(priority > 1)
 		m_Platform->LowPriorityWait();
 	if(priority > 0)
 		m_Platform->MidPriorityWait();
 	m_Platform->HighPriorityWait();
-
-	if(DEBUG_PRINT == true)
-		fprintf(stderr, "End Mutex Wait\n");
 
 	int res = TX_FAIL;
 	int length = txpacket[LENGTH] + 4;
@@ -244,8 +219,8 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                     int _addr = txpacket[PARAMETER+(3*x)+3];
 
                     to_length += _len + 6;
-                    m_BuReDaBu[_id].length = _len;
-                    m_BuReDaBu[_id].start_address = _addr;
+                    m_BulkReadData[_id].length = _len;
+                    m_BulkReadData[_id].start_address = _addr;
                 }
 
                 m_Platform->SetPacketTimeout(to_length*1.5);
@@ -286,11 +261,9 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                 for(int x = 0; x < num; x++)
                 {
                     int _id = txpacket[PARAMETER+(3*x)+2];
-                    m_BuReDaBu[_id].error = -1;
+                    m_BulkReadData[_id].error = -1;
                 }
 
-                if(DEBUG_PRINT == true)
-                    fprintf(stderr, "\n");
                 while(1)
                 {
                     int i;
@@ -307,14 +280,14 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                         // Check checksum
                         unsigned char checksum = CalculateChecksum(rxpacket);
                         if(DEBUG_PRINT == true)
-                            fprintf(stderr, "  CHK:%.2X\n", checksum);
+                            fprintf(stderr, "CHK:%.2X\n", checksum);
 
                         if(rxpacket[LENGTH+rxpacket[LENGTH]] == checksum)
                         {
                             for(int j = 0; j < (rxpacket[LENGTH]-2); j++)
-                                m_BuReDaBu[rxpacket[ID]].table[m_BuReDaBu[rxpacket[ID]].start_address + j] = rxpacket[PARAMETER + j];
+                                m_BulkReadData[rxpacket[ID]].table[m_BulkReadData[rxpacket[ID]].start_address + j] = rxpacket[PARAMETER + j];
 
-                            m_BuReDaBu[rxpacket[ID]].error = (int)rxpacket[ERRBIT];
+                            m_BulkReadData[rxpacket[ID]].error = (int)rxpacket[ERRBIT];
 
                             int cur_packet_length = LENGTH + 1 + rxpacket[LENGTH];
                             to_length = get_length - cur_packet_length;
@@ -350,14 +323,6 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                         get_length -= i;
                     }
                 }
-//                if (res == SUCCESS)
-//                {
-//                	for(int i = 0; i < ID_BROADCAST; i++)
-//					{
-//						if (m_BuReDaBu[i].length > 0)
-//							m_BuReDaBu[i].clone(&m_BulkReadData[i]);// = m_BuReDaBu[i];
-//					}
-//				}
 			}
 			else
 				res = SUCCESS;			
@@ -404,17 +369,11 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
 		}
 	}
 
-	if(DEBUG_PRINT == true)
-		fprintf(stderr, "Start Mutex Release\n");
-
 	m_Platform->HighPriorityRelease();
     if(priority > 0)
         m_Platform->MidPriorityRelease();
     if(priority > 1)
         m_Platform->LowPriorityRelease();
-
-	if(DEBUG_PRINT == true)
-		fprintf(stderr, "End Mutex Release\n");
 
 	return res;
 }
@@ -454,92 +413,39 @@ void CM730::MakeBulkReadPacket()
 //        }
 //    }
 
-    int moe = 0;
 #ifdef BOT_HAS_HANDS
-//    if(Ping(JointData::ID_R_GRIPPER, 0) == SUCCESS)
-//    {
-//        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
-//        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_GRIPPER;  // id
-//        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
-//        number++;
-//    }
     if(Ping(JointData::ID_R_GRIPPER, 0) == SUCCESS)
     {
-		if(ReadWord(JointData::ID_R_GRIPPER, 0, &moe, 0) == SUCCESS)
-		{
-		    if (moe == DXL_MODELS::MX28)
-		    {
-		        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
-		        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_GRIPPER;  // id
-		        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start
-		        number++;
-		    }
-		}
-	}
-//    if(Ping(JointData::ID_L_GRIPPER, 0) == SUCCESS)
-//    {
-//        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
-//        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_GRIPPER;  // id
-//        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
-//        number++;
-//    }
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_GRIPPER;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
+        number++;
+    }
     if(Ping(JointData::ID_L_GRIPPER, 0) == SUCCESS)
     {
-		if(ReadWord(JointData::ID_L_GRIPPER, 0, &moe, 0) == SUCCESS)
-		{
-		    if (moe == DXL_MODELS::MX28)
-		    {
-		        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
-		        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_GRIPPER;  // id
-		        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start
-		        number++;
-		    }
-		}
-	}
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_GRIPPER;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
+        number++;
+    }
 #endif
 
 #ifdef BOT_HAS_WRISTS
-//    if(Ping(JointData::ID_R_WRIST, 0) == SUCCESS)
-//    {
-//        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
-//        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_WRIST;  // id
-//        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
-//        number++;
-//    }
     if(Ping(JointData::ID_R_WRIST, 0) == SUCCESS)
     {
-		if(ReadWord(JointData::ID_R_WRIST, 0, &moe, 0) == SUCCESS)
-		{
-		    if (moe == DXL_MODELS::MX28)
-		    {
-		        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
-		        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_WRIST;  // id
-		        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start
-		        number++;
-		    }
-		}
-	}
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_WRIST;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start address
+        number++;
+    }
 
-//    if(Ping(JointData::ID_L_WRIST, 0) == SUCCESS)
-//    {
-//        m_BulkReadTxPacket[PARAMETER+3*number+1] = 14;   // length
-//        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_WRIST;  // id
-//        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start //address
-//        number++;
-//    }
     if(Ping(JointData::ID_L_WRIST, 0) == SUCCESS)
     {
-		if(ReadWord(JointData::ID_L_WRIST, 0, &moe, 0) == SUCCESS)
-		{
-		    if (moe == DXL_MODELS::MX28)
-		    {
-		        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
-		        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_WRIST;  // id
-		        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start
-		        number++;
-		    }
-		}
-	}
+        m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_WRIST;  // id
+        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_GOAL_POSITION_L; // start //address
+        number++;
+    }
 #endif
 
     if(Ping(FSR::ID_L_FSR, 0) == SUCCESS)
@@ -566,12 +472,7 @@ int CM730::BulkRead()
     unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };
 
     if(m_BulkReadTxPacket[LENGTH] != 0)
-    {
-    	if(DEBUG_PRINT == true)
-    	    fprintf(stderr, "Attempting BulkRead()...\n");
-
         return TxRxPacket(m_BulkReadTxPacket, rxpacket, 0);
-    }
     else
     {
         MakeBulkReadPacket();
@@ -581,16 +482,6 @@ int CM730::BulkRead()
 
 int CM730::SyncWrite(int start_addr, int each_length, int number, int *pParam)
 {
-    if(DEBUG_PRINT == true)
-        fprintf(stderr, "Just called SyncWrite()\n");
-
-    if ((number * each_length)>MAXNUM_TXPARAM)
-    {
-//        if(DEBUG_PRINT == true)
-            fprintf(stderr, "Called SyncWrite() with too many parameters to fit in a single TX_Packet.\n");
-        return TX_FAIL;
-    }
-
 	unsigned char txpacket[MAXNUM_TXPARAM + 10] = {0, };
 	unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };
 	int n;
@@ -602,9 +493,6 @@ int CM730::SyncWrite(int start_addr, int each_length, int number, int *pParam)
     for(n = 0; n < (number * each_length); n++)
         txpacket[PARAMETER + 2 + n]   = (unsigned char)pParam[n];
     txpacket[LENGTH]            = n + 4;
-
-    if(DEBUG_PRINT == true)
-        fprintf(stderr, "Attempting SyncWrite()...\n");
 
     return TxRxPacket(txpacket, rxpacket, 0);
 }
@@ -843,3 +731,33 @@ int CM730::MakeColor(int red, int green, int blue)
 
 	return (int)(((b>>3)<<10)|((g>>3)<<5)|(r>>3));
 }
+
+// ***   WEBOTS PART  *** //
+
+void CM730::MakeBulkReadPacketWb()
+{
+		int number = 0;
+
+		m_BulkReadTxPacket[ID] = (unsigned char)ID_BROADCAST;
+		m_BulkReadTxPacket[INSTRUCTION] = INST_BULK_READ;
+		m_BulkReadTxPacket[PARAMETER] = (unsigned char)0x0;
+
+		if(Ping(CM730::ID_CM, 0) == SUCCESS)
+		{
+				m_BulkReadTxPacket[PARAMETER+3*number+1] = 30;
+				m_BulkReadTxPacket[PARAMETER+3*number+2] = CM730::ID_CM;
+				m_BulkReadTxPacket[PARAMETER+3*number+3] = CM730::P_DXL_POWER;
+				number++;
+		}
+
+		for(int id = 1; id < JointData::NUMBER_OF_JOINTS; id++)
+		{
+				m_BulkReadTxPacket[PARAMETER+3*number+1] = 6; // length (goal + speed + torque)
+				m_BulkReadTxPacket[PARAMETER+3*number+2] = id;	// id
+				m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
+				number++;
+		}
+
+		m_BulkReadTxPacket[LENGTH] = (number * 3) + 3;
+}
+

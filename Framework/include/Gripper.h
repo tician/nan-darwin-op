@@ -27,9 +27,7 @@ namespace Robot
 		double _current;
 		
 		double _torque;
-		double _speed;
 		bool _d_torque;
-		bool _d_speed;
 
 		Gripper(int id);
 		
@@ -52,13 +50,11 @@ namespace Robot
 		double GetNeutralAngle()		{ return _neutral; }
 		double GetCurrentAngle()		{ return _current; }
 		double GetTorqueLimit()			{ return _torque; }
-		double GetSpeedLimit()			{ return _speed; }
 		
 		double GetTorqueNow();
 		double GetSpeedNow();
 
 		double SetTorqueLimit(double torque);
-		double SetSpeedLimit(double speed);
 
 		void MoveToNeutral();
 		void MoveToNeutral(double torque);

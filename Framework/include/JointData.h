@@ -11,7 +11,6 @@
 #define BOT_HAS_HANDS
 //#define BOT_HAS_WRISTS
 
-#include "AXM.h"
 #include "MX28.h"
 
 namespace Robot
@@ -69,14 +68,6 @@ namespace Robot
 
 		enum
 		{
-		    SPEED_DEFAULT       = -1,
-		    SPEED_LOW           = 200,
-		    SPEED_MID           = 512,
-		    SPEED_MAX           = 1023
-		};
-
-		enum
-		{
 		    TORQUE_DEFAULT      = -1,
 		    TORQUE_LOW          = 200,
 		    TORQUE_MID          = 512,
@@ -95,7 +86,6 @@ namespace Robot
         int m_IGain[NUMBER_OF_JOINTS];
         int m_DGain[NUMBER_OF_JOINTS];
 
-        int m_SpeedLim[NUMBER_OF_JOINTS];
         int m_TorqueLim[NUMBER_OF_JOINTS];
 
 	public:
@@ -159,8 +149,6 @@ namespace Robot
         int  GetDGain(int id)            { return m_DGain[id]; }
 
         /// Set/Get Speed and PWM limits
-        void SetSpeedLim(int id, int speed) { m_SpeedLim[id] = speed; }
-        int  GetSpeedLim(int id)            { return m_SpeedLim[id]; }
         void SetTorqueLim(int id, int torque) { m_TorqueLim[id] = torque; }
         int  GetTorqueLim(int id)            { return m_TorqueLim[id]; }
 	};
@@ -193,17 +181,7 @@ namespace Robot
 		}
 
 		/// Set/Get Angle, Speed, and PWM values
-		void	SetAngleNow(int id, double pos)
-		{
-			if (	(m_Model[id]==DXL_MODELS::AX12) ||
-					(m_Model[id]==DXL_MODELS::AX18) ||
-					(m_Model[id]==DXL_MODELS::AX12W) )
-				m_AngleNow[id] = AXM::Value2Angle(pos);
-			else if ( (m_Model[id]==DXL_MODELS::MX28) )
-				m_AngleNow[id] = MX28::Value2Angle(pos);
-			else
-				m_AngleNow[id] = pos/(1.0);
-		}
+		void	SetAngleNow(int id, double pos)	{ m_AngleNow[id] = MX28::Value2Angle(pos); }
 		double	GetAngleNow(int id)					{ return m_AngleNow[id]; }
 		void	SetSpeedNow(int id, int speed)		{ m_SpeedNow[id] = speed; }
 		int		GetSpeedNow(int id)					{ return m_SpeedNow[id]; }
