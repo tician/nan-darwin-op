@@ -15,12 +15,12 @@ TARGET = darwin.a
 
 INCLUDE_DIRS = -I../include -I../../Framework/include
 
-#CXXFLAGS += -O2 -pedantic -DLINUX -Wall -shared $(INCLUDE_DIRS)
+CXXFLAGS += -O2 -pedantic -DLINUX -Wall -shared $(INCLUDE_DIRS)
 #CXXFLAGS += -O2 -DDEBUG -DLINUX -Wall -shared $(INCLUDE_DIRS)
-CXXFLAGS += -O2 -ggdb -pedantic -DLINUX -Wall -shared $(INCLUDE_DIRS)
+#CXXFLAGS += -O2 -ggdb -pedantic -DLINUX -Wall -shared $(INCLUDE_DIRS)
 #CXXFLAGS += -O0 -DLINUX -Wall -shared $(INCLUDE_DIRS)
-#LFLAGS += -lpthread -ldl -lrt
-LFLAGS += -ggdb -lpthread -ldl -lrt
+LFLAGS += -lpthread -ldl -lrt
+#LFLAGS += -ggdb -lpthread -ldl -lrt
 
 OBJS =  ../../Framework/src/CM730.o     	\
         ../../Framework/src/MX28.o     	\
@@ -38,6 +38,7 @@ OBJS =  ../../Framework/src/CM730.o     	\
         ../../Framework/src/motion/modules/Walking.o\
         ../../Framework/src/vision/BallFollower.o   \
         ../../Framework/src/vision/BallTracker.o    \
+        ../../Framework/src/vision/Camera.o    \
         ../../Framework/src/vision/ColorFinder.o    \
         ../../Framework/src/vision/Image.o  		\
         ../../Framework/src/vision/ImgProcess.o 	\

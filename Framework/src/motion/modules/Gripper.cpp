@@ -220,7 +220,7 @@ double Gripper::Squeeze(double torque)
 	double torlim = (torque*1.0);
 	double tormov = (torque*1.2);
 	double Astart=0.0;
-	while ( (overTorque<50) && (_current<_closedLimit) )
+	while ( (overTorque<20) && (_current<_closedLimit) )
 	{
 		MoveToAngle(_current+1.0, tormov);
 		tor = this->GetTorqueNow();
@@ -254,7 +254,7 @@ double Gripper::Spread(double torque)
 	double torlim = (torque*-1.0);
 	double tormov = (torque*1.2);
 	double Astart=0.0;
-	while ( (overTorque<50) && (_current>_openLimit) )
+	while ( (overTorque<20) && (_current>_openLimit) )
 	{
 		MoveToAngle(_current-1.0, tormov);
 		tor = this->GetTorqueNow();
