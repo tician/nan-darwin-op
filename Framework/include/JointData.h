@@ -170,7 +170,7 @@ namespace Robot
 	protected:
 		int		m_Model[JointData::NUMBER_OF_JOINTS];
 
-		double	m_PoseNow[JointData::NUMBER_OF_JOINTS];
+		double	m_AngleNow[JointData::NUMBER_OF_JOINTS];
 		int		m_SpeedNow[JointData::NUMBER_OF_JOINTS];
 		int		m_TorqueNow[JointData::NUMBER_OF_JOINTS];
 
@@ -183,7 +183,7 @@ namespace Robot
 		{
 			for (int id=1; id<JointData::NUMBER_OF_JOINTS; id++)
 			{
-				m_PoseNow[id] = 0.0;
+				m_AngleNow[id] = 0.0;
 				m_SpeedNow[id] = 0;
 				m_TorqueNow[id] = 0;
 				m_Temperature[id] = 0;
@@ -192,19 +192,19 @@ namespace Robot
 			}
 		}
 
-		/// Set/Get Pose, Speed, and PWM values
-		void	SetPoseNow(int id, double pos)
+		/// Set/Get Angle, Speed, and PWM values
+		void	SetAngleNow(int id, double pos)
 		{
 			if (	(m_Model[id]==DXL_MODELS::AX12) ||
 					(m_Model[id]==DXL_MODELS::AX18) ||
 					(m_Model[id]==DXL_MODELS::AX12W) )
-				m_PoseNow[id] = AXM::Value2Angle(pos);
+				m_AngleNow[id] = AXM::Value2Angle(pos);
 			else if ( (m_Model[id]==DXL_MODELS::MX28) )
-				m_PoseNow[id] = MX28::Value2Angle(pos);
+				m_AngleNow[id] = MX28::Value2Angle(pos);
 			else
-				m_PoseNow[id] = pos/(1.0);
+				m_AngleNow[id] = pos/(1.0);
 		}
-		double	GetPoseNow(int id)					{ return m_PoseNow[id]; }
+		double	GetAngleNow(int id)					{ return m_AngleNow[id]; }
 		void	SetSpeedNow(int id, int speed)		{ m_SpeedNow[id] = speed; }
 		int		GetSpeedNow(int id)					{ return m_SpeedNow[id]; }
 		void	SetTorqueNow(int id, int torque)	{ m_TorqueNow[id] = torque; }

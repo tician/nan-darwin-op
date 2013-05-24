@@ -21,7 +21,7 @@ namespace Robot
 	public:
 		JointData m_Joint;
 
-		static const int TIME_UNIT = 8; //msec 
+		static const int TIME_UNIT = 32;//8; //msec 
 
 		virtual void Initialize() = 0;
 		virtual void Process() = 0;

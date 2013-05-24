@@ -193,92 +193,98 @@ void MotionManager::Process()
     int BuRe_Res = m_CM730->BulkRead();
 //    std::cout << "Bulk Read Result: " << BuRe_Res << std::endl;
 
-    // calibrate gyro sensor
-    if( (m_CalibrationStatus == 0 || m_CalibrationStatus == -1) && (BuRe_Res==CM730::SUCCESS) )
+    if (BuRe_Res==CM730::SUCCESS)
     {
-        static int fb_gyro_array[GYRO_WINDOW_SIZE] = {512,};
-        static int rl_gyro_array[GYRO_WINDOW_SIZE] = {512,};
-        static int buf_idx = 0;
 
-        if(buf_idx < GYRO_WINDOW_SIZE)
-        {
-            if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
-            {
-                fb_gyro_array[buf_idx] = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_Y_L);
-                rl_gyro_array[buf_idx] = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_X_L);
-                buf_idx++;
-            }
-        }
-        else
-        {
-            double fb_sum = 0.0, rl_sum = 0.0;
-            double fb_sd = 0.0, rl_sd = 0.0;
-            double fb_diff, rl_diff;
-            double fb_mean = 0.0, rl_mean = 0.0;
+		// calibrate gyro sensor
+		if(m_CalibrationStatus == 0 || m_CalibrationStatus == -1)
+		{
+		    static int fb_gyro_array[GYRO_WINDOW_SIZE] = {512,};
+		    static int rl_gyro_array[GYRO_WINDOW_SIZE] = {512,};
+		    static int buf_idx = 0;
 
-            buf_idx = 0;
+		    if(buf_idx < GYRO_WINDOW_SIZE)
+		    {
+		        if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
+		        {
+		            fb_gyro_array[buf_idx] = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_Y_L);
+		            rl_gyro_array[buf_idx] = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_X_L);
+		            buf_idx++;
+		        }
+		    }
+		    else
+		    {
+		        double fb_sum = 0.0, rl_sum = 0.0;
+		        double fb_sd = 0.0, rl_sd = 0.0;
+		        double fb_diff, rl_diff;
+		        double fb_mean = 0.0, rl_mean = 0.0;
 
-            for(int i = 0; i < GYRO_WINDOW_SIZE; i++)
-            {
-                fb_sum += fb_gyro_array[i];
-                rl_sum += rl_gyro_array[i];
-            }
-            fb_mean = fb_sum / GYRO_WINDOW_SIZE;
-            rl_mean = rl_sum / GYRO_WINDOW_SIZE;
+		        buf_idx = 0;
 
-            fb_sum = 0.0; rl_sum = 0.0;
-            for(int i = 0; i < GYRO_WINDOW_SIZE; i++)
-            {
-                fb_diff = fb_gyro_array[i] - fb_mean;
-                rl_diff = rl_gyro_array[i] - rl_mean;
-                fb_sum += fb_diff * fb_diff;
-                rl_sum += rl_diff * rl_diff;
-            }
-            fb_sd = sqrt(fb_sum / GYRO_WINDOW_SIZE);
-            rl_sd = sqrt(rl_sum / GYRO_WINDOW_SIZE);
+		        for(int i = 0; i < GYRO_WINDOW_SIZE; i++)
+		        {
+		            fb_sum += fb_gyro_array[i];
+		            rl_sum += rl_gyro_array[i];
+		        }
+		        fb_mean = fb_sum / GYRO_WINDOW_SIZE;
+		        rl_mean = rl_sum / GYRO_WINDOW_SIZE;
 
-            if(fb_sd < MARGIN_OF_SD && rl_sd < MARGIN_OF_SD)
-            {
-                m_FBGyroCenter = (int)fb_mean;
-                m_RLGyroCenter = (int)rl_mean;
-                m_CalibrationStatus = 1;
-                if(DEBUG_PRINT == true)
-                    fprintf(stderr, "FBGyroCenter:%d , RLGyroCenter:%d \n", m_FBGyroCenter, m_RLGyroCenter);
-            }
-            else
-            {
-                m_FBGyroCenter = 512;
-                m_RLGyroCenter = 512;
-                m_CalibrationStatus = -1;
-            }
-        }
-    }
+		        fb_sum = 0.0; rl_sum = 0.0;
+		        for(int i = 0; i < GYRO_WINDOW_SIZE; i++)
+		        {
+		            fb_diff = fb_gyro_array[i] - fb_mean;
+		            rl_diff = rl_gyro_array[i] - rl_mean;
+		            fb_sum += fb_diff * fb_diff;
+		            rl_sum += rl_diff * rl_diff;
+		        }
+		        fb_sd = sqrt(fb_sum / GYRO_WINDOW_SIZE);
+		        rl_sd = sqrt(rl_sum / GYRO_WINDOW_SIZE);
 
-    if( (m_CalibrationStatus == 1 && m_Enabled == true) && (BuRe_Res==CM730::SUCCESS) )
+		        if(fb_sd < MARGIN_OF_SD && rl_sd < MARGIN_OF_SD)
+		        {
+		            m_FBGyroCenter = (int)fb_mean;
+		            m_RLGyroCenter = (int)rl_mean;
+		            m_CalibrationStatus = 1;
+		            if(DEBUG_PRINT == true)
+		                fprintf(stderr, "FBGyroCenter:%d , RLGyroCenter:%d \n", m_FBGyroCenter, m_RLGyroCenter);
+		        }
+		        else
+		        {
+		            m_FBGyroCenter = 512;
+		            m_RLGyroCenter = 512;
+		            m_CalibrationStatus = -1;
+		        }
+		    }
+		}
+	}
+    if(m_CalibrationStatus == 1 && m_Enabled == true)
     {
-        static int fb_array[ACCEL_WINDOW_SIZE] = {512,};
-        static int buf_idx = 0;
-        if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
-        {
-            MotionStatus::FB_GYRO = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_Y_L) - m_FBGyroCenter;
-            MotionStatus::RL_GYRO = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_X_L) - m_RLGyroCenter;
-            MotionStatus::RL_ACCEL = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_ACCEL_X_L);
-            MotionStatus::FB_ACCEL = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_ACCEL_Y_L);
-            fb_array[buf_idx] = MotionStatus::FB_ACCEL;
-            if(++buf_idx >= ACCEL_WINDOW_SIZE) buf_idx = 0;
-        }
+    	if (BuRe_Res==CM730::SUCCESS)
+    	{
+		    static int fb_array[ACCEL_WINDOW_SIZE] = {512,};
+		    static int buf_idx = 0;
+		    if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
+		    {
+		        MotionStatus::FB_GYRO = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_Y_L) - m_FBGyroCenter;
+		        MotionStatus::RL_GYRO = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_GYRO_X_L) - m_RLGyroCenter;
+		        MotionStatus::RL_ACCEL = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_ACCEL_X_L);
+		        MotionStatus::FB_ACCEL = m_CM730->m_BulkReadData[CM730::ID_CM].ReadWord(CM730::P_ACCEL_Y_L);
+		        fb_array[buf_idx] = MotionStatus::FB_ACCEL;
+		        if(++buf_idx >= ACCEL_WINDOW_SIZE) buf_idx = 0;
+		    }
 
-        int sum = 0, avr = 512;
-        for(int idx = 0; idx < ACCEL_WINDOW_SIZE; idx++)
-            sum += fb_array[idx];
-        avr = sum / ACCEL_WINDOW_SIZE;
+		    int sum = 0, avr = 512;
+		    for(int idx = 0; idx < ACCEL_WINDOW_SIZE; idx++)
+		        sum += fb_array[idx];
+		    avr = sum / ACCEL_WINDOW_SIZE;
 
-        if(avr < MotionStatus::FALLEN_F_LIMIT)
-            MotionStatus::FALLEN = FORWARD;
-        else if(avr > MotionStatus::FALLEN_B_LIMIT)
-            MotionStatus::FALLEN = BACKWARD;
-        else
-            MotionStatus::FALLEN = STANDUP;
+		    if(avr < MotionStatus::FALLEN_F_LIMIT)
+		        MotionStatus::FALLEN = FORWARD;
+		    else if(avr > MotionStatus::FALLEN_B_LIMIT)
+		        MotionStatus::FALLEN = BACKWARD;
+		    else
+		        MotionStatus::FALLEN = STANDUP;
+		}
 
 ///This should be the easiest way to keep the grippers and wrists out of trouble
 // If no module is actively controlling them and overriding their positions,
@@ -326,7 +332,7 @@ void MotionManager::Process()
         int num_axm = 0;
 
 #ifdef GRIPPER_EXPERIMENTAL
-        int param_spd[JointData::NUMBER_OF_JOINTS * 2], param_trq[JointData::NUMBER_OF_JOINTS * 2];
+        int param_spd[JointData::NUMBER_OF_JOINTS * 3], param_trq[JointData::NUMBER_OF_JOINTS * 3];
         int n_spd = 0, n_trq = 0;
         int num_spd = 0, num_trq = 0;
 #endif
@@ -399,17 +405,17 @@ void MotionManager::Process()
 
 #ifdef GRIPPER_EXPERIMENTAL
         if(num_spd > 0)
-            m_CM730->SyncWrite(MX28::P_MOVING_SPEED_L, 2, num_spd, param_spd);
+            m_CM730->SyncWrite(MX28::P_MOVING_SPEED_L, 3, num_spd, param_spd);
         if(num_trq > 0)
-            m_CM730->SyncWrite(MX28::P_TORQUE_LIMIT_L, 2, num_trq, param_trq);
+            m_CM730->SyncWrite(MX28::P_TORQUE_LIMIT_L, 3, num_trq, param_trq);
 #endif
     }
 
 //    m_CM730->BulkRead();
-    if (BuRe_Res==CM730::SUCCESS)
-    {
+//    if (BuRe_Res==CM730::SUCCESS)
+//    {
 
-    if(m_IsLogging)
+    if(m_IsLogging && (BuRe_Res==CM730::SUCCESS))
     {
         for(int id = 1; id < JointData::NUMBER_OF_JOINTS; id++)
             m_LogFileStream << MotionStatus::m_CurrentJoints.GetValue(id) << "," << m_CM730->m_BulkReadData[id].ReadWord(MX28::P_PRESENT_POSITION_L) << ",";
@@ -428,7 +434,7 @@ void MotionManager::Process()
     int moe=0;
 #ifdef BOT_HAS_HANDS
     moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER);
-    if (moe == DXL_MODELS::MX28)
+    if( (moe == DXL_MODELS::MX28) && (BuRe_Res==CM730::SUCCESS) )
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -450,7 +456,7 @@ void MotionManager::Process()
 
 
     moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER);
-    if (moe == DXL_MODELS::MX28)
+    if( (moe == DXL_MODELS::MX28) && (BuRe_Res==CM730::SUCCESS) )
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -473,7 +479,7 @@ void MotionManager::Process()
 
 #ifdef BOT_HAS_WRISTS
     moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST);
-    if (moe == DXL_MODELS::MX28)
+    if( (moe == DXL_MODELS::MX28) && (BuRe_Res==CM730::SUCCESS) )
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -494,7 +500,7 @@ void MotionManager::Process()
     }
 
     moe = MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST);
-    if (moe == DXL_MODELS::MX28)
+    if( (moe == DXL_MODELS::MX28) && (BuRe_Res==CM730::SUCCESS) )
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
         MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
@@ -516,10 +522,10 @@ void MotionManager::Process()
 #endif
 
 
-
-    if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
-        MotionStatus::BUTTON = m_CM730->m_BulkReadData[CM730::ID_CM].ReadByte(CM730::P_BUTTON);
-
+    if(BuRe_Res==CM730::SUCCESS)
+    {
+		if(m_CM730->m_BulkReadData[CM730::ID_CM].error == 0)
+		    MotionStatus::BUTTON = m_CM730->m_BulkReadData[CM730::ID_CM].ReadByte(CM730::P_BUTTON);
     }
     m_IsRunning = false;
 }
