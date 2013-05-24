@@ -34,7 +34,7 @@ BulkReadData::BulkReadData() :
         length(0),
         error(-1)
 {
-    for(int i = 0; i < MX28::MAXNUM_ADDRESS; i++)
+    for(int i = 0; i < 128; i++)//MX28::MAXNUM_ADDRESS; i++)
         table[i] = 0;
 }
 
@@ -56,6 +56,18 @@ int BulkReadData::ReadWord(int address)
     return retval;
 }
 
+bool BulkReadData::clone(BulkReadData *sink)
+{
+	if (length == 0)
+		return false;
+	
+	sink->start_address = this->start_address;
+	sink->length = this->length;
+	sink->error = this->error;
+	for (int i=start_address; i<(start_address+length); i++)
+		sink->table[i] = this->table[i];
+	return true;
+}
 
 
 
@@ -65,12 +77,8 @@ CM730::CM730(PlatformCM730 *platform)
 	DEBUG_PRINT = false;
 	for(int i = 0; i < ID_BROADCAST; i++)
 	{
-		m_BulkReadDataBuffer1[i] = BulkReadData();
-		m_BulkReadDataBuffer2[i] = BulkReadData();
+		m_BuReDaBu[i] = BulkReadData();
 	}
-	m_BuReBool = true;
-	m_BuReDaBu = m_BulkReadDataBuffer1;
-	m_BulkReadData = m_BulkReadDataBuffer2;
 }
 
 CM730::~CM730()
@@ -225,19 +233,6 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
 			}
 			else if(txpacket[INSTRUCTION] == INST_BULK_READ)
 			{
-				if (m_BuReBool)
-				{
-					m_BulkReadData = m_BulkReadDataBuffer2;
-					m_BuReDaBu = m_BulkReadDataBuffer1;
-					m_BuReBool = false;
-				}
-				else
-				{
-					m_BulkReadData = m_BulkReadDataBuffer1;
-					m_BuReDaBu = m_BulkReadDataBuffer2;
-					m_BuReBool = true;
-				}
-					
                 int to_length = 0;
                 int num = (txpacket[LENGTH]-3) / 3;
 
@@ -354,6 +349,14 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                         get_length -= i;
                     }
                 }
+                if (res == SUCCESS)
+                {
+                	for(int i = 0; i < ID_BROADCAST; i++)
+					{
+						if (m_BuReDaBu[i].length > 0)
+							m_BuReDaBu[i].clone(&m_BulkReadData[i]);// = m_BuReDaBu[i];
+					}
+				}
 			}
 			else
 				res = SUCCESS;			

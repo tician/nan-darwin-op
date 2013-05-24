@@ -32,6 +32,7 @@ namespace Robot
         int ReadWord(int address);
 //        int ReadLength();
 //        int ReadError();
+		bool clone(BulkReadData*);
     };
 
 	class PlatformCM730
@@ -168,14 +169,11 @@ namespace Robot
 		int TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority);
 		unsigned char CalculateChecksum(unsigned char *packet);
 
-		BulkReadData m_BulkReadDataBuffer1[ID_BROADCAST];
-		BulkReadData m_BulkReadDataBuffer2[ID_BROADCAST];
-		bool m_BuReBool;
-		BulkReadData *m_BuReDaBu;
+		BulkReadData m_BuReDaBu[ID_BROADCAST];
 
 	public:
 		bool DEBUG_PRINT;
-        BulkReadData *m_BulkReadData;
+        BulkReadData m_BulkReadData[ID_BROADCAST];
 
 		CM730(PlatformCM730 *platform);
 		~CM730();
