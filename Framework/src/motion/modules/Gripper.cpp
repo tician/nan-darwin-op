@@ -238,7 +238,8 @@ double Gripper::Squeeze(double torque)
 
 		usleep(50000);
 	}
-	_current = (Astart+5.0);
+	if (overTorque>0)
+		_current = (Astart+1.0);
 	MoveToAngle(_current, torque);
 	tor = this->GetTorqueNow();
 	
@@ -271,7 +272,8 @@ double Gripper::Spread(double torque)
 
 		usleep(50000);
 	}
-	_current = (Astart-2.0);
+	if (overTorque>0)
+		_current = (Astart-1.0);
 	MoveToAngle(_current, torque);
 	tor = this->GetTorqueNow();
 	
