@@ -40,30 +40,21 @@ BulkReadData::BulkReadData() :
 
 int BulkReadData::ReadByte(int address)
 {
+	int retval = 0;
     if(address >= start_address && address < (start_address + length))
-        return (int)table[address];
+        retval = (int)table[address];
 
-    return 0;
+    return retval;
 }
 
 int BulkReadData::ReadWord(int address)
 {
+	int retval = 0;
     if(address >= start_address && address < (start_address + length))
-        return CM730::MakeWord(table[address], table[address+1]);
+        retval = CM730::MakeWord(table[address], table[address+1]);
 
-    return 0;
+    return retval;
 }
-
-void BulkReadData::Wait()
-{
-    sem_wait_nointr(&m_BuReSemID);
-}
-
-void BulkReadData::Release()
-{
-	sem_post(&m_BuReSemID);
-}
-
 
 
 
@@ -73,7 +64,13 @@ CM730::CM730(PlatformCM730 *platform)
 	m_Platform = platform;
 	DEBUG_PRINT = false;
 	for(int i = 0; i < ID_BROADCAST; i++)
-	    m_BulkReadData[i] = BulkReadData();
+	{
+		m_BulkReadDataBuffer1[i] = BulkReadData();
+		m_BulkReadDataBuffer2[i] = BulkReadData();
+	}
+	m_BuReBool = true;
+	m_BuReDaBu = m_BulkReadDataBuffer1;
+	m_BulkReadData = m_BulkReadDataBuffer2;
 }
 
 CM730::~CM730()
@@ -228,6 +225,19 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
 			}
 			else if(txpacket[INSTRUCTION] == INST_BULK_READ)
 			{
+				if (m_BuReBool)
+				{
+					m_BulkReadData = m_BulkReadDataBuffer2;
+					m_BuReDaBu = m_BulkReadDataBuffer1;
+					m_BuReBool = false;
+				}
+				else
+				{
+					m_BulkReadData = m_BulkReadDataBuffer1;
+					m_BuReDaBu = m_BulkReadDataBuffer2;
+					m_BuReBool = true;
+				}
+					
                 int to_length = 0;
                 int num = (txpacket[LENGTH]-3) / 3;
 
@@ -238,8 +248,8 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                     int _addr = txpacket[PARAMETER+(3*x)+3];
 
                     to_length += _len + 6;
-                    m_BulkReadData[_id].length = _len;
-                    m_BulkReadData[_id].start_address = _addr;
+                    m_BuReDaBu[_id].length = _len;
+                    m_BuReDaBu[_id].start_address = _addr;
                 }
 
                 m_Platform->SetPacketTimeout(to_length*1.5);
@@ -280,7 +290,7 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                 for(int x = 0; x < num; x++)
                 {
                     int _id = txpacket[PARAMETER+(3*x)+2];
-                    m_BulkReadData[_id].error = -1;
+                    m_BuReDaBu[_id].error = -1;
                 }
 
                 if(DEBUG_PRINT == true)
@@ -306,9 +316,9 @@ int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int prio
                         if(rxpacket[LENGTH+rxpacket[LENGTH]] == checksum)
                         {
                             for(int j = 0; j < (rxpacket[LENGTH]-2); j++)
-                                m_BulkReadData[rxpacket[ID]].table[m_BulkReadData[rxpacket[ID]].start_address + j] = rxpacket[PARAMETER + j];
+                                m_BuReDaBu[rxpacket[ID]].table[m_BuReDaBu[rxpacket[ID]].start_address + j] = rxpacket[PARAMETER + j];
 
-                            m_BulkReadData[rxpacket[ID]].error = (int)rxpacket[ERRBIT];
+                            m_BuReDaBu[rxpacket[ID]].error = (int)rxpacket[ERRBIT];
 
                             int cur_packet_length = LENGTH + 1 + rxpacket[LENGTH];
                             to_length = get_length - cur_packet_length;

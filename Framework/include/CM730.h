@@ -18,9 +18,6 @@ namespace Robot
 {
     class BulkReadData
     {
-	private:
-		sem_t m_BuReSemID;
-
     public:
         int start_address;
         int length;
@@ -33,9 +30,8 @@ namespace Robot
 
         int ReadByte(int address);
         int ReadWord(int address);
-        
-        virtual void BuRe_Wait() = 0;
-        virtual void BuRe_Release() = 0;
+//        int ReadLength();
+//        int ReadError();
     };
 
 	class PlatformCM730
@@ -172,9 +168,14 @@ namespace Robot
 		int TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority);
 		unsigned char CalculateChecksum(unsigned char *packet);
 
+		BulkReadData m_BulkReadDataBuffer1[ID_BROADCAST];
+		BulkReadData m_BulkReadDataBuffer2[ID_BROADCAST];
+		bool m_BuReBool;
+		BulkReadData *m_BuReDaBu;
+
 	public:
 		bool DEBUG_PRINT;
-        BulkReadData m_BulkReadData[ID_BROADCAST];
+        BulkReadData *m_BulkReadData;
 
 		CM730(PlatformCM730 *platform);
 		~CM730();
