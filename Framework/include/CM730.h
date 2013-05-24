@@ -18,10 +18,15 @@ namespace Robot
     class BulkReadData
     {
     public:
+//        volatile int start_address;
+//        volatile int length;
+//        volatile int error;
+//        volatile unsigned char table[MX28::MAXNUM_ADDRESS];
         int start_address;
         int length;
         int error;
-        unsigned char table[MX28::MAXNUM_ADDRESS];
+//        unsigned char table[MX28::MAXNUM_ADDRESS];
+        unsigned char table[128];
 
         BulkReadData();
         virtual ~BulkReadData() {}

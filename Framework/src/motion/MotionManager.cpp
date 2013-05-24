@@ -17,6 +17,9 @@ using namespace Robot;
 
 MotionManager* MotionManager::m_UniqueInstance = new MotionManager();
 
+const int MotionManager::LENGTH_SYNCWRITE_MX = 1024;//(JointData::MAX_NUMBER_OF_JOINTS * MX28::PARAM_BYTES);
+const int MotionManager::LENGTH_SYNCWRITE_TRQ = 512;//(JointData::MAX_NUMBER_OF_JOINTS * 3);
+
 MotionManager::MotionManager() :
         m_CM730(0),
         m_ProcessEnable(false),
@@ -314,13 +317,13 @@ void MotionManager::Process()
         }
     }
 
-    int param_mx[JointData::NUMBER_OF_JOINTS * MX28::PARAM_BYTES];
+    int param_mx[LENGTH_SYNCWRITE_MX];
     int n_mx = 0;
     int num_mx = 0;
 
 
 #ifdef GRIPPER_EXPERIMENTAL
-    int param_trq[JointData::NUMBER_OF_JOINTS * 3];
+    int param_trq[LENGTH_SYNCWRITE_TRQ];
     int n_trq = 0;
     int num_trq = 0;
 #endif

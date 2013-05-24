@@ -51,6 +51,8 @@ namespace Robot
 			NUMBER_OF_JOINTS
 		};
 
+		static const int MAX_NUMBER_OF_JOINTS;
+
 		enum
 		{
 			SLOPE_HARD			= 16,

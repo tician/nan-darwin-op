@@ -44,6 +44,9 @@ namespace Robot
 	protected:
 
 	public:
+		static const int LENGTH_SYNCWRITE_MX;
+		static const int LENGTH_SYNCWRITE_TRQ;
+
 		bool DEBUG_PRINT;
         int m_Offset[JointData::NUMBER_OF_JOINTS];
 

@@ -68,7 +68,7 @@ CM730::~CM730()
 	Disconnect();
 }
 
-int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority)
+int __attribute__((optimize("O0"))) CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority) 
 {
 	if(priority > 1)
 		m_Platform->LowPriorityWait();
@@ -467,7 +467,7 @@ void CM730::MakeBulkReadPacket()
     m_BulkReadTxPacket[LENGTH]          = (number * 3) + 3;
 }
 
-int CM730::BulkRead()
+int __attribute__((optimize("O0"))) CM730::BulkRead()
 {
     unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };
 
@@ -480,7 +480,7 @@ int CM730::BulkRead()
     }
 }
 
-int CM730::SyncWrite(int start_addr, int each_length, int number, int *pParam)
+int __attribute__((optimize("O0"))) CM730::SyncWrite(int start_addr, int each_length, int number, int *pParam)
 {
 	unsigned char txpacket[MAXNUM_TXPARAM + 10] = {0, };
 	unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };

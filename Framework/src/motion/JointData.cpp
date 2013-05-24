@@ -11,6 +11,8 @@
 
 using namespace Robot;
 
+const int JointData::MAX_NUMBER_OF_JOINTS = 31;
+
 JointData::JointData()
 {
     for(int i=0; i<NUMBER_OF_JOINTS; i++)
