@@ -70,6 +70,9 @@ namespace Robot
 		double MoveByAngle(double delta, double torque);
 		void MoveToAngle(double angle);
 		void MoveToAngle(double angle, double torque);
+		
+		double Squeeze(double torque);
+		double Spread(double torque);
 
         void LoadINISettings(minIni* ini);
         void LoadINISettings(minIni* ini, const std::string &section);

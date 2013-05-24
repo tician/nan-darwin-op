@@ -86,7 +86,7 @@ int main(void)
         sleep(2);
         std::cout << "\'Load\': " << Gripper::GetRight()->GetTorqueNow() << std::endl;
 */
-
+/*
         double countChocula = 0.0;
         while(countChocula<15.0)
         {
@@ -109,6 +109,13 @@ int main(void)
             countChocula += 1.0;
             usleep(100000);
         }
+*/
+		Gripper::GetRight()->MoveToOpen();
+		sleep(5);
+		Gripper::GetRight()->Squeeze(0.2);
+		sleep(5);
+		Gripper::GetRight()->Spread(0.2);
+		sleep(5);
 
     }
 

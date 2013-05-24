@@ -5,6 +5,7 @@
 #include "MotionStatus.h"
 #include "Gripper.h"
 #include <math.h>
+#include <iostream>
 
 using namespace Robot;
 
@@ -243,6 +244,28 @@ void Gripper::MoveToAngle(double angle, double torque)
 	}
 
 	Bump();
+}
+
+double Gripper::Squeeze(double torque)
+{
+	while ( (fabs(this->GetTorqueNow()) < torque) && (_current<_closedLimit) )
+	{
+		MoveToAngle(_current+1.0, torque*1.2);
+        std::cout << "\'Load\': " << this->GetTorqueNow() << std::endl;
+		usleep(50000);
+	}
+	return _current;
+}
+
+double Gripper::Spread(double torque)
+{
+	while ( (fabs(this->GetTorqueNow()) < torque) && (_current>_openLimit) )
+	{
+		MoveToAngle(_current-1.0, torque*1.2);
+        std::cout << "\'Load\': " << this->GetTorqueNow() << std::endl;
+		usleep(50000);
+	}
+	return _current;
 }
 
 void Gripper::Process()
