@@ -219,18 +219,30 @@ double Gripper::Squeeze(double torque)
 	double tor = this->GetTorqueNow();
 	double torlim = (torque*1.0);
 	double tormov = (torque*1.2);
-	while ( (overTorque<100) && (_current<_closedLimit) )
+	double Astart=0.0, Astop=0.0;
+	while ( (overTorque<50) && (_current<_closedLimit) )
 	{
 		MoveToAngle(_current+1.0, tormov);
 		tor = this->GetTorqueNow();
 		fprintf(stderr, "\'Load\': %0.2f\n", tor);
-        if (tor > torlim)
-        	overTorque++;
-        else
-        	overTorque = 0;
+		if (tor > torlim)
+		{
+			if (overTorque==0)
+			{
+				overTorque++;
+				Astart = _current;
+			}
+		}
+		else
+			overTorque = 0;
 
 		usleep(50000);
 	}
+	Astop = _current;
+	_current = (Astart+Astop)/2.0;
+	MoveToAngle(_current, torque);
+	tor = this->GetTorqueNow();
+	
 	fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
 	return _current;
 }
@@ -241,18 +253,29 @@ double Gripper::Spread(double torque)
 	double tor = this->GetTorqueNow();
 	double torlim = (torque*-1.0);
 	double tormov = (torque*1.2);
-	while ( (overTorque<100) && (_current>_openLimit) )
+	double Astart=0.0, Astop=0.0;
+	while ( (overTorque<50) && (_current>_openLimit) )
 	{
 		MoveToAngle(_current-1.0, tormov);
 		tor = this->GetTorqueNow();
 		fprintf(stderr, "\'Load\': %0.2f\n", tor);
-        if (tor < torlim)
-        	overTorque++;
-        else
-        	overTorque = 0;
-
+		if (tor < torlim)
+		{
+			if (overTorque==0)
+			{
+				overTorque++;
+				Astart = _current;
+			}
+		}
+		else
+			overTorque = 0;
 		usleep(50000);
 	}
+	Astop = _current;
+	_current = (Astart+Astop)/2.0;
+	MoveToAngle(_current, torque);
+	tor = this->GetTorqueNow();
+	
 	fprintf(stderr, "Stopped spreading at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
 	return _current;
 }
