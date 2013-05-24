@@ -54,6 +54,19 @@ int BulkReadData::ReadWord(int address)
     return 0;
 }
 
+void BulkReadData::Wait()
+{
+    sem_wait_nointr(&m_BuReSemID);
+}
+
+void BulkReadData::Release()
+{
+	sem_post(&m_BuReSemID);
+}
+
+
+
+
 
 CM730::CM730(PlatformCM730 *platform)
 {

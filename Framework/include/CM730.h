@@ -18,6 +18,9 @@ namespace Robot
 {
     class BulkReadData
     {
+	private:
+		sem_t m_BuReSemID;
+
     public:
         int start_address;
         int length;
@@ -30,6 +33,9 @@ namespace Robot
 
         int ReadByte(int address);
         int ReadWord(int address);
+        
+        virtual void BuRe_Wait() = 0;
+        virtual void BuRe_Release() = 0;
     };
 
 	class PlatformCM730

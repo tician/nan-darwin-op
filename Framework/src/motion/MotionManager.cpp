@@ -332,7 +332,8 @@ void MotionManager::Process()
         int num_axm = 0;
 
 #ifdef GRIPPER_EXPERIMENTAL
-        int param_spd[JointData::NUMBER_OF_JOINTS * 3], param_trq[JointData::NUMBER_OF_JOINTS * 3];
+        int param_spd[JointData::NUMBER_OF_JOINTS * 3];
+        int param_trq[JointData::NUMBER_OF_JOINTS * 3];
         int n_spd = 0, n_trq = 0;
         int num_spd = 0, num_trq = 0;
 #endif
@@ -395,19 +396,36 @@ void MotionManager::Process()
         }
 
         if(num_mx > 0)
+        {
+//	        std::cout << "MX SyncWrite Start\n";
 #ifdef MX28_1024
             m_CM730->SyncWrite(MX28::P_CW_COMPLIANCE_SLOPE, MX28::PARAM_BYTES, num_mx, param_mx);
 #else
             m_CM730->SyncWrite(MX28::P_D_GAIN, MX28::PARAM_BYTES, num_mx, param_mx);
 #endif
+//	        std::cout << "MX SyncWrite Complete\n";
+	    }
+
         if (num_axm > 0)
+        {
+//	        std::cout << "AX SyncWrite Start\n";
             m_CM730->SyncWrite(AXM::P_CW_COMPLIANCE_SLOPE, AXM::PARAM_BYTES, num_axm, param_axm);
+//	        std::cout << "AX SyncWrite Complete\n";
+	    }
 
 #ifdef GRIPPER_EXPERIMENTAL
         if(num_spd > 0)
+        {
+//	        std::cout << "Speed SyncWrite Start\n";
             m_CM730->SyncWrite(MX28::P_MOVING_SPEED_L, 3, num_spd, param_spd);
+//	        std::cout << "Speed SyncWrite Complete\n";
+        }
         if(num_trq > 0)
+        {
+//	        std::cout << "Torque SyncWrite Start\n";
             m_CM730->SyncWrite(MX28::P_TORQUE_LIMIT_L, 3, num_trq, param_trq);
+//	        std::cout << "Torque SyncWrite Complete\n";
+        }
 #endif
     }
 

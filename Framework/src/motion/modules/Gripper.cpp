@@ -42,8 +42,8 @@ void Gripper::Bump()
 			_torque *= -1.0;
 		if (_torque > 1.0)
 			_torque = 1.0;
-		if (m_Joint.GetEnable(_id) == true)
-		    m_Joint.SetTorqueLim( _id, (int)(1023*_torque) );
+//		if (m_Joint.GetEnable(_id) == true)
+//		    m_Joint.SetTorqueLim( _id, (int)(1023*_torque) );
 	}
 	if (_d_speed)
 	{
@@ -51,11 +51,11 @@ void Gripper::Bump()
 			_speed *= -1.0;
 		if (_speed > 1.0)
 			_speed = 1.0;
-		if(m_Joint.GetEnable(_id) == true)
-		    m_Joint.SetSpeedLim( _id, (int)(1023*_speed) );
+//		if(m_Joint.GetEnable(_id) == true)
+//		    m_Joint.SetSpeedLim( _id, (int)(1023*_speed) );
 	}
-	_d_torque = false;
-	_d_speed = false;
+//	_d_torque = false;
+//	_d_speed = false;
 
 	if (_closedLimit > _openLimit)
 	{
@@ -248,7 +248,7 @@ void Gripper::MoveToAngle(double angle, double torque)
 
 double Gripper::Squeeze(double torque)
 {
-	while ( (fabs(this->GetTorqueNow()) < torque) && (_current<_closedLimit) )
+	while ( (this->GetTorqueNow() < torque*1.1) && (_current<_closedLimit) )
 	{
 		MoveToAngle(_current+1.0, torque*1.2);
         std::cout << "\'Load\': " << this->GetTorqueNow() << std::endl;
@@ -259,7 +259,7 @@ double Gripper::Squeeze(double torque)
 
 double Gripper::Spread(double torque)
 {
-	while ( (fabs(this->GetTorqueNow()) < torque) && (_current>_openLimit) )
+	while ( (this->GetTorqueNow() > torque*1.1) && (_current>_openLimit) )
 	{
 		MoveToAngle(_current-1.0, torque*1.2);
         std::cout << "\'Load\': " << this->GetTorqueNow() << std::endl;
@@ -273,7 +273,21 @@ void Gripper::Process()
 	if (_id==0)
 		return;
 
-
 	if(m_Joint.GetEnable(_id) == true)
+	{
 		m_Joint.SetAngle(_id, _current);
+
+		if (_d_torque)
+			m_Joint.SetTorqueLim(_id, _torque);
+		else
+			m_Joint.SetTorqueLim(_id, JointData::TORQUE_DEFAULT);
+
+		if (_d_speed)
+			m_Joint.SetSpeedLim(_id, _speed);
+		else
+			m_Joint.SetSpeedLim(_id, JointData::SPEED_DEFAULT);
+
+		_d_torque = false;
+		_d_speed = false;
+	}
 }
