@@ -321,7 +321,7 @@ void MotionManager::Process()
     int n_trq = 0;
     int num_trq = 0;
 
-    int param_trq[LENGTH_SYNCWRITE_AXM];
+    int param_axm[LENGTH_SYNCWRITE_AXM];
     int n_axm = 0;
     int num_axm = 0;
 
