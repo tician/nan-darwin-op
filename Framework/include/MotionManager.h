@@ -46,6 +46,7 @@ namespace Robot
 	public:
 		static const int LENGTH_SYNCWRITE_MX;
 		static const int LENGTH_SYNCWRITE_TRQ;
+		static const int LENGTH_SYNCWRITE_AXM;
 
 		bool DEBUG_PRINT;
         int m_Offset[JointData::NUMBER_OF_JOINTS];

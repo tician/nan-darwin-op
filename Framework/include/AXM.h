@@ -1,5 +1,5 @@
 /*
- *   MX28.h
+ *   AXM.h
  *
  *   Author: ROBOTIS
  *
@@ -24,10 +24,12 @@ namespace Robot
 			HaViMo2                  = 0,
 			//CM730                  =   ?
 			MX28                     = 29,
-			IRSA                     = 330     // 0x014A
+			MX64                     = 310,		// 0x0136
+			MX106                    = 356,		// 0x0164		
+			IRSA                     = 330		// 0x014A
 		};
 	};
-	class MX28
+	class AXM
 	{
 	public:
 		static const int MIN_VALUE;

@@ -416,35 +416,55 @@ void CM730::MakeBulkReadPacket()
 #ifdef BOT_HAS_HANDS
     if(Ping(JointData::ID_R_GRIPPER, 0) == SUCCESS)
     {
-        m_BulkReadTxPacket[PARAMETER+3*number+1] = 12;   // length
-        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_GRIPPER;  // id
-        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
-        number++;
+    	int moe;
+	    ReadWord(JointData::ID_R_GRIPPER, 0, &moe, 0);
+    	if( (moe == DXL_MODELS::MX28 ) || (moe == DXL_MODELS::MX64 ) || (moe == DXL_MODELS::MX106 ) )
+    	{
+		    m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+		    m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_GRIPPER;  // id
+		    m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
+		    number++;
+		}
     }
     if(Ping(JointData::ID_L_GRIPPER, 0) == SUCCESS)
     {
-        m_BulkReadTxPacket[PARAMETER+3*number+1] = 12;   // length
-        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_GRIPPER;  // id
-        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
-        number++;
+    	int moe;
+	    ReadWord(JointData::ID_L_GRIPPER, 0, &moe, 0);
+    	if( (moe == DXL_MODELS::MX28 ) || (moe == DXL_MODELS::MX64 ) || (moe == DXL_MODELS::MX106 ) )
+		{
+		    m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+		    m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_GRIPPER;  // id
+		    m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
+		    number++;
+		}
     }
 #endif
 
 #ifdef BOT_HAS_WRISTS
     if(Ping(JointData::ID_R_WRIST, 0) == SUCCESS)
     {
-        m_BulkReadTxPacket[PARAMETER+3*number+1] = 12;   // length
-        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_WRIST;  // id
-        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
-        number++;
+    	int moe;
+	    ReadWord(JointData::ID_R_WRIST, 0, &moe, 0);
+    	if( (moe == DXL_MODELS::MX28 ) || (moe == DXL_MODELS::MX64 ) || (moe == DXL_MODELS::MX106 ) )
+    	{
+		    m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+		    m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_R_WRIST;  // id
+		    m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
+		    number++;
+		}
     }
 
     if(Ping(JointData::ID_L_WRIST, 0) == SUCCESS)
     {
-        m_BulkReadTxPacket[PARAMETER+3*number+1] = 12;   // length
-        m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_WRIST;  // id
-        m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start //address
-        number++;
+       	int moe;
+	    ReadWord(JointData::ID_L_WRIST, 0, &moe, 0);
+    	if( (moe == DXL_MODELS::MX28 ) || (moe == DXL_MODELS::MX64 ) || (moe == DXL_MODELS::MX106 ) )
+		{
+		    m_BulkReadTxPacket[PARAMETER+3*number+1] = 8;   // length
+		    m_BulkReadTxPacket[PARAMETER+3*number+2] = JointData::ID_L_WRIST;  // id
+		    m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start //address
+		    number++;
+		}
     }
 #endif
 
