@@ -429,6 +429,7 @@ void MotionManager::Process()
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER) == DXL_MODELS::MX64) ||
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER) == DXL_MODELS::MX106) )
 		{
+MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, MX28::Value2Angle(m_CM730->m_BulkReadData[JointData::ID_r_GRIPPER].ReadWord(MX28::P_PRESENT_POSITION_L) ) );
 		    MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
 		    MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
 		    MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
@@ -443,7 +444,7 @@ void MotionManager::Process()
 			if (m_CM730->ReadTable(JointData::ID_R_GRIPPER, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
 				int temp = ((tableau[1]<<8) + (tableau[0])&0x00FF)&0xFFFF;
-	//    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, temp );
+	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, AXM::::Value2Angle( temp ) );
 				temp = ((tableau[3]<<8) + (tableau[2])&0x00FF)&0xFFFF;
 				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, temp );
 				temp = ((tableau[5]<<8) + (tableau[4])&0x00FF)&0xFFFF;
@@ -462,6 +463,7 @@ void MotionManager::Process()
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER) == DXL_MODELS::MX64) ||
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER) == DXL_MODELS::MX106) )
 		{
+MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, MX28::Value2Angle(m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_POSITION_L) ) );
 		    MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
 		    MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadWord(MX28::P_PRESENT_LOAD_L) );
 		    MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_L_GRIPPER].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
@@ -476,7 +478,7 @@ void MotionManager::Process()
 			if (m_CM730->ReadTable(JointData::ID_L_GRIPPER, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
 				int temp = ((tableau[1]<<8) + (tableau[0])&0x00FF)&0xFFFF;
-	//    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, temp );
+	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, AXM::::Value2Angle( temp ) );
 				temp = ((tableau[3]<<8) + (tableau[2])&0x00FF)&0xFFFF;
 				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, temp );
 				temp = ((tableau[5]<<8) + (tableau[4])&0x00FF)&0xFFFF;
@@ -497,6 +499,7 @@ void MotionManager::Process()
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST) == DXL_MODELS::MX64) ||
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST) == DXL_MODELS::MX106) )
 		{
+MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, MX28::Value2Angle(m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_POSITION_L) ) );
 		    MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
 		    MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
 		    MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_WRIST, m_CM730->m_BulkReadData[JointData::ID_R_WRIST].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
@@ -511,7 +514,7 @@ void MotionManager::Process()
 			if (m_CM730->ReadTable(JointData::ID_R_WRIST, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
 				int temp = ((tableau[1]<<8) + (tableau[0])&0x00FF)&0xFFFF;
-	//    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, temp );
+	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, AXM::::Value2Angle( temp ) );
 				temp = ((tableau[3]<<8) + (tableau[2])&0x00FF)&0xFFFF;
 				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, temp );
 				temp = ((tableau[5]<<8) + (tableau[4])&0x00FF)&0xFFFF;
@@ -530,6 +533,7 @@ void MotionManager::Process()
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST) == DXL_MODELS::MX64) ||
 			(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST) == DXL_MODELS::MX106) )
 		{
+		    MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_WRIST, MX28::Value2Angle(m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_POSITION_L) ) );
 		    MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_SPEED_L) );
 		    MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadWord(MX28::P_PRESENT_LOAD_L) );
 		    MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_WRIST, m_CM730->m_BulkReadData[JointData::ID_L_WRIST].ReadByte(MX28::P_PRESENT_TEMPERATURE) );
@@ -544,7 +548,7 @@ void MotionManager::Process()
 			if (m_CM730->ReadTable(JointData::ID_L_WRIST, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
 				int temp = ((tableau[1]<<8) + (tableau[0])&0x00FF)&0xFFFF;
-	//    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_WRIST, temp );
+	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_WRIST, AXM::::Value2Angle( temp ) );
 				temp = ((tableau[3]<<8) + (tableau[2])&0x00FF)&0xFFFF;
 				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, temp );
 				temp = ((tableau[5]<<8) + (tableau[4])&0x00FF)&0xFFFF;

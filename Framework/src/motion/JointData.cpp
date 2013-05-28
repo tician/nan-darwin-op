@@ -211,7 +211,9 @@ bool JointData::GetEnable(int id)
 
 void JointData::SetValue(int id, int value)
 {
-    if (MotionStatus::m_JointStatus.GetModel(id) == 29)
+    if( (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::MX28) ||
+        (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::MX64) ||
+        (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::MX106) )
     {
         if(value < MX28::MIN_VALUE)
             value = MX28::MIN_VALUE;
@@ -220,6 +222,18 @@ void JointData::SetValue(int id, int value)
 
         m_Value[id] = value;
         m_Angle[id] = MX28::Value2Angle(value);
+    }
+    else if( (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::AX12) ||
+              (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::AX18) ||
+              (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::AX12W) )
+    {
+        if(value < AXM::MIN_VALUE)
+            value = AXM::MIN_VALUE;
+        else if(value > AXM::MAX_VALUE)
+            value = AXM::MAX_VALUE;
+
+        m_Value[id] = value;
+        m_Angle[id] = AXM::Value2Angle(value);
     }
     else
     {
@@ -236,7 +250,9 @@ int JointData::GetValue(int id)
 
 void JointData::SetAngle(int id, double angle)
 {
-    if (MotionStatus::m_JointStatus.GetModel(id) == 29)
+    if( (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::MX28) ||
+        (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::MX64) ||
+        (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::MX106) )
     {
         if(angle < MX28::MIN_ANGLE)
             angle = MX28::MIN_ANGLE;
@@ -246,9 +262,21 @@ void JointData::SetAngle(int id, double angle)
         m_Angle[id] = angle;
         m_Value[id] = MX28::Angle2Value(angle);
     }
+    else if( (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::AX12) ||
+              (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::AX18) ||
+              (MotionStatus::m_JointStatus.GetModel(id) == DXL_MODELS::AX12W) )
+    {
+        if(angle < AXM::MIN_ANGLE)
+            angle = AXM::MIN_ANGLE;
+        else if(angle > AXM::MAX_ANGLE)
+            angle = AXM::MAX_ANGLE;
+
+        m_Angle[id] = angle;
+        m_Value[id] = AXM::Angle2Value(angle);
+    }
     else
     {
-        m_Angle[id] = 0.0;
+	    m_Angle[id] = 0.0;
         m_Value[id] = 512;
     }
 }

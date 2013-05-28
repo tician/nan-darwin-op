@@ -11,6 +11,7 @@
 #define BOT_HAS_HANDS
 //#define BOT_HAS_WRISTS
 
+#include "AXM.h"
 #include "MX28.h"
 
 namespace Robot
@@ -183,7 +184,7 @@ namespace Robot
 		}
 
 		/// Set/Get Angle, Speed, and PWM values
-		void	SetAngleNow(int id, double pos)	{ m_AngleNow[id] = MX28::Value2Angle(pos); }
+		void	SetAngleNow(int id, double ang)	{ m_AngleNow[id] = ang; }
 		double	GetAngleNow(int id)					{ return m_AngleNow[id]; }
 		void	SetSpeedNow(int id, int speed)		{ m_SpeedNow[id] = speed; }
 		int		GetSpeedNow(int id)					{ return m_SpeedNow[id]; }
