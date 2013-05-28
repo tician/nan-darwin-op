@@ -440,18 +440,15 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, MX28::Value2An
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER) == DXL_MODELS::AX18) ||
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER) == DXL_MODELS::AX12W) )
 		{
-		   	unsigned char tableau[8];
+		   	unsigned char tableau[AXM::MAXNUM_ADDRESS];
 			int err = 0;
 			if (m_CM730->ReadTable(JointData::ID_R_GRIPPER, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
-				int temp = ( (tableau[1]<<8) + ((tableau[0])&0x00FF) )&0xFFFF;
-	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, AXM::Value2Angle( temp ) );
-				temp = ( (tableau[3]<<8) + ((tableau[2])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, temp );
-				temp = ( (tableau[5]<<8) + ((tableau[4])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_GRIPPER, temp );
+	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, AXM::Value2Angle( CM730::MakeWord(tableau[AXM::P_PRESENT_POSITION_L], tableau[AXM::P_PRESENT_POSITION_H]) ) );
+				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, CM730::MakeWord(tableau[AXM::P_PRESENT_SPEED_L], tableau[AXM::P_PRESENT_SPEED_H]) );
+				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_GRIPPER, CM730::MakeWord(tableau[AXM::P_PRESENT_LOAD_L], tableau[AXM::P_PRESENT_LOAD_H]) );
 
-				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_GRIPPER, (tableau[7]&0x00FF) );
+				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_GRIPPER, tableau[AXM::P_PRESENT_TEMPERATURE] );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_GRIPPER, err );
 			}
 			else
@@ -478,18 +475,15 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, MX28::Value2An
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER) == DXL_MODELS::AX18) ||
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_GRIPPER) == DXL_MODELS::AX12W) )
 		{
-			unsigned char tableau[8];
+			unsigned char tableau[AXM::MAXNUM_ADDRESS];
 			int err = 0;
 			if (m_CM730->ReadTable(JointData::ID_L_GRIPPER, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
-				int temp = ( (tableau[1]<<8) + ((tableau[0])&0x00FF) )&0xFFFF;
-	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, AXM::Value2Angle( temp ) );
-				temp = ( (tableau[3]<<8) + ((tableau[2])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, temp );
-				temp = ( (tableau[5]<<8) + ((tableau[4])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_GRIPPER, temp );
+				MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, AXM::Value2Angle( CM730::MakeWord(tableau[AXM::P_PRESENT_POSITION_L], tableau[AXM::P_PRESENT_POSITION_H]) ) );
+				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_GRIPPER, CM730::MakeWord(tableau[AXM::P_PRESENT_SPEED_L], tableau[AXM::P_PRESENT_SPEED_H]) );
+				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_GRIPPER, CM730::MakeWord(tableau[AXM::P_PRESENT_LOAD_L], tableau[AXM::P_PRESENT_LOAD_H]) );
 
-				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_GRIPPER, (tableau[7]&0x00FF) );
+				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_GRIPPER, tableau[AXM::P_PRESENT_TEMPERATURE] );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_GRIPPER, err );
 			}
 			else
@@ -518,18 +512,15 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, MX28::Value2Angl
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST) == DXL_MODELS::AX18) ||
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_WRIST) == DXL_MODELS::AX12W) )
 		{
-			unsigned char tableau[8];
+			unsigned char tableau[AXM::MAXNUM_ADDRESS];
 			int err = 0;
 			if (m_CM730->ReadTable(JointData::ID_R_WRIST, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
-				int temp = ( (tableau[1]<<8) + ((tableau[0])&0x00FF) )&0xFFFF;
-	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, AXM::Value2Angle( temp ) );
-				temp = ( (tableau[3]<<8) + ((tableau[2])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, temp );
-				temp = ( (tableau[5]<<8) + ((tableau[4])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_WRIST, temp );
+				MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, AXM::Value2Angle( CM730::MakeWord(tableau[AXM::P_PRESENT_POSITION_L], tableau[AXM::P_PRESENT_POSITION_H]) ) );
+				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_WRIST, CM730::MakeWord(tableau[AXM::P_PRESENT_SPEED_L], tableau[AXM::P_PRESENT_SPEED_H]) );
+				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_R_WRIST, CM730::MakeWord(tableau[AXM::P_PRESENT_LOAD_L], tableau[AXM::P_PRESENT_LOAD_H]) );
 
-				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_WRIST, (tableau[7]&0x00FF) );
+				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_WRIST, tableau[AXM::P_PRESENT_TEMPERATURE] );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_WRIST, err );
 			}
 			else
@@ -556,18 +547,15 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, MX28::Value2Angl
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST) == DXL_MODELS::AX18) ||
 		        	(MotionStatus::m_JointStatus.GetModel(JointData::ID_L_WRIST) == DXL_MODELS::AX12W) )
 		{
-		    unsigned char tableau[8];
+		    unsigned char tableau[AXM::MAXNUM_ADDRESS];
 			int err = 0;
 			if (m_CM730->ReadTable(JointData::ID_L_WRIST, AXM::P_PRESENT_POSITION_L, AXM::P_PRESENT_TEMPERATURE, tableau, &err) == CM730::SUCCESS)
 			{
-				int temp = ( (tableau[1]<<8) + ((tableau[0])&0x00FF) )&0xFFFF;
-	    		MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_WRIST, AXM::Value2Angle( temp ) );
-				temp = ( (tableau[3]<<8) + ((tableau[2])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, temp );
-				temp = ( (tableau[5]<<8) + ((tableau[4])&0x00FF) )&0xFFFF;
-				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_WRIST, temp );
+				MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_WRIST, AXM::Value2Angle( CM730::MakeWord(tableau[AXM::P_PRESENT_POSITION_L], tableau[AXM::P_PRESENT_POSITION_H]) ) );
+				MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_L_WRIST, CM730::MakeWord(tableau[AXM::P_PRESENT_SPEED_L], tableau[AXM::P_PRESENT_SPEED_H]) );
+				MotionStatus::m_JointStatus.SetTorqueNow( JointData::ID_L_WRIST, CM730::MakeWord(tableau[AXM::P_PRESENT_LOAD_L], tableau[AXM::P_PRESENT_LOAD_H]) );
 
-				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_WRIST, (tableau[7]&0x00FF) );
+				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_WRIST, tableau[AXM::P_PRESENT_TEMPERATURE] );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_WRIST, err );
 			}
 			else
