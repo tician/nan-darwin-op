@@ -49,33 +49,40 @@ int main(void)
 	MotionManager::GetInstance()->SetEnable(true);
 	/////////////////////////////////////////////////////////////////////
 
-	Gripper::GetRight()->m_Joint.SetEnableBody(false);
-	Gripper::GetRight()->m_Joint.SetEnable(JointData::ID_R_GRIPPER, true);
+//	Gripper::GetRight()->m_Joint.SetEnableBody(false);
+//	Gripper::GetRight()->m_Joint.SetEnable(JointData::ID_R_GRIPPER, true);
 
 	Gripper::GetRight()->m_Joint.SetPGain(JointData::ID_R_GRIPPER, 8);
 
-	Gripper::GetLeft()->m_Joint.SetEnableBody(false);
-	Gripper::GetLeft()->m_Joint.SetEnable(JointData::ID_L_GRIPPER, true);
+//	Gripper::GetLeft()->m_Joint.SetEnableBody(false);
+//	Gripper::GetLeft()->m_Joint.SetEnable(JointData::ID_L_GRIPPER, true);
 
     while(1)
     {
+		std::cout << "Start Spreading\n";
+		Gripper::GetRight()->StartSpreading(0.2);
+		Gripper::GetLeft()->StartSpreading(0.2);
+		sleep(1);
+		while ((Gripper::GetLeft()->IsSpreading()==true) || (Gripper::GetRight()->IsSpreading()==true) );
+		std::cout << "Done Spreading\n";
+		sleep(2);
+
 //		Gripper::GetRight()->Squeeze(0.2);
 //		std::cout << "Present angle (R): " << Gripper::GetRight()->GetAngleNow() << std::endl;
 //		Gripper::GetLeft()->Squeeze(0.2);
 //		std::cout << "Present angle (L): " << Gripper::GetLeft()->GetAngleNow() << std::endl;
+		std::cout << "Start Squeezing\n";
 		Gripper::GetRight()->StartSqueezing(0.2);
 		Gripper::GetLeft()->StartSqueezing(0.2);
-		while ((Gripper::GetLeft()->IsSqueezing()) || (Gripper::GetRight()->IsSqueezing()) );
+		sleep(1);
+		while ((Gripper::GetLeft()->IsSqueezing()==true) || (Gripper::GetRight()->IsSqueezing()==true) );
+		std::cout << "Done Squeezing\n";
 		sleep(2);
 
 //		Gripper::GetRight()->Spread(0.3);
 //		std::cout << "Present angle (R): " << Gripper::GetRight()->GetAngleNow() << std::endl;
 //		Gripper::GetLeft()->Spread(0.3);
 //		std::cout << "Present angle (L): " << Gripper::GetLeft()->GetAngleNow() << std::endl;
-		Gripper::GetRight()->StartSpreading(0.2);
-		Gripper::GetLeft()->StartSpreading(0.2);
-		while ((Gripper::GetLeft()->IsSpreading()) || (Gripper::GetRight()->IsSpreading()) );
-		sleep(2);
 		
     }
 

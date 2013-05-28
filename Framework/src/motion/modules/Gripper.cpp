@@ -20,16 +20,14 @@ Gripper::Gripper(int id)
 , _current(0.0)
 , _torque(0.25)
 , _d_torque(false)
-, _sqz_torque(0.2)
-, _isSqueezing(false)
-, _sqz_count(0)
-, _spr_torque(0.2)
-, _isSpreading(false)
-, _spr_count(0)
+, _mv_count(0)
+, _mv_torque(0.2)
+, _mv_mode(0)
 {
 	if (id > 20)
 	{
 		_id = id;
+		m_Joint.SetEnableBody(false);
 		m_Joint.SetEnable(_id, true, true);
 	}
 }
@@ -226,62 +224,21 @@ void Gripper::MoveToAngle(double angle, double torque)
 
 void Gripper::StartSqueezing(double torque)
 {
-	_isSpreading = false;
-
-	_sqz_torque = torque;
-	_sqz_count = 0;
-	
-	_isSqueezing = true;
+	_mv_count = 0;
+	_mv_torque = torque;
+	_mv_mode = 1;
 }
 
 void Gripper::StopSqueezing()
 {
-	_sqz_count = 0;
-	_isSqueezing = false;
+	_mv_count = 0;
+	_mv_mode = 0;
 }
-
-void Gripper::Squeeze()
-{
-	double tor;
-	if ( (_sqz_count<10) && (_current<_closedLimit) )
-	{
-		_current += 1.0;
-//		MoveToAngle(_current, (_sqz_torque*1.2));
-		tor = this->GetTorqueNow();
-//		fprintf(stderr, "\'Load\': %0.2f\n", tor);
-		if (tor > (_sqz_torque*1.0))
-		{
-			_sqz_count++;
-		}
-		else
-		{
-			_sqz_count = 0;
-		}
-	}
-	else if (_sqz_count>=10)
-	{
-		_isSqueezing = false;
-		_current -= (_sqz_count/2);
-//		MoveToAngle(_current, _sqz_torque);
-		tor = this->GetTorqueNow();
-	
-		fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
-	}
-	else
-	{
-		_isSqueezing = false;
-//		MoveToAngle(_current, _sqz_torque);
-		tor = this->GetTorqueNow();
-	
-		fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
-	}
-}
-
 
 double Gripper::Squeeze(double torque)
 {
-	_isSqueezing = false;
-	_isSpreading = false;
+	_mv_mode = 0;
+
 	int overTorque = 0;
 	double tor = this->GetTorqueNow();
 	double torlim = (torque*-1.0);
@@ -316,61 +273,20 @@ double Gripper::Squeeze(double torque)
 
 void Gripper::StartSpreading(double torque)
 {
-	_isSqueezing = false;
-
-	_spr_torque = torque;
-	_spr_count = 0;
-
-	_isSpreading = true;
+	_mv_torque = torque;
+	_mv_count = 0;
+	_mv_mode = 2;
 }
 
 void Gripper::StopSpreading()
 {
-	_isSpreading = false;
-}
-
-void Gripper::Spread()
-{
-	double tor;
-	if ( (_spr_count<10) && (_current>_openLimit) )
-	{
-		_current -= 1.0;
-//		MoveToAngle(_current, (_sqz_torque*1.2));
-		tor = this->GetTorqueNow();
-//		fprintf(stderr, "\'Load\': %0.2f\n", tor);
-
-		if (tor < (_spr_torque*1.0))
-		{
-			_spr_count++;
-		}
-		else
-		{
-			_spr_count = 0;
-		}
-	}
-	else if (_spr_count>=10)
-	{
-		_isSpreading = false;
-		_current += (_spr_count/2);
-//		MoveToAngle(_current, _spr_torque);
-		tor = this->GetTorqueNow();
-	
-		fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
-	}
-	else
-	{
-		_isSpreading = false;
-//		MoveToAngle(_current, _spr_torque);
-		tor = this->GetTorqueNow();
-	
-		fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
-	}
+	_mv_count = 0;
+	_mv_mode = 0;
 }
 
 double Gripper::Spread(double torque)
 {
-	_isSqueezing = false;
-	_isSpreading = false;
+	_mv_mode = 0;
 
 	int overTorque = 0;
 	double tor = this->GetTorqueNow();
@@ -411,10 +327,59 @@ void Gripper::Process()
 
 	if(m_Joint.GetEnable(_id) == true)
 	{
-		if (_isSqueezing)
-			Squeeze();
-		else if (_isSpreading)
-			Spread();
+		if (_mv_mode==1)
+		{
+			double tor;
+			if ( (_mv_count<20) && (_current<_closedLimit) )
+			{
+				MoveByAngle(0.5, (_mv_torque*1.2));
+				tor = this->GetTorqueNow();
+				fprintf(stderr, "\'Load\': %0.2f\n", tor);
+				if (tor > (_mv_torque*1.0))
+				{
+					_mv_count++;
+				}
+				else
+				{
+					_mv_count = 0;
+				}
+			}
+			else
+			{
+				MoveByAngle(-(_mv_count/2.0), _mv_torque);
+				tor = this->GetTorqueNow();
+	
+				fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
+				_mv_mode = 0;
+			}
+		}
+		else if (_mv_mode==2)
+		{
+			double tor;
+			if ( (_mv_count<20) && (_current>_openLimit) )
+			{
+				MoveByAngle(-0.5, (_mv_torque*1.2));
+				tor = this->GetTorqueNow();
+				fprintf(stderr, "\'Load\': %0.2f\n", tor);
+
+				if (tor < (_mv_torque*-1.0))
+				{
+					_mv_count++;
+				}
+				else
+				{
+					_mv_count = 0;
+				}
+			}
+			else
+			{
+				MoveByAngle((_mv_count/2.0), _mv_torque);
+				tor = this->GetTorqueNow();
+	
+				fprintf(stderr, "Stopped spreading at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
+				_mv_mode = 0;
+			}
+		}
 
 		m_Joint.SetAngle(_id, _current);
 

@@ -68,7 +68,9 @@ CM730::~CM730()
 	Disconnect();
 }
 
-int CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority) 
+int
+__attribute__((optimize("O0"))) 
+CM730::TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority) 
 {
 	if(priority > 1)
 		m_Platform->LowPriorityWait();
@@ -762,7 +764,9 @@ int CM730::MakeColor(int red, int green, int blue)
 
 // ***   WEBOTS PART  *** //
 
-void CM730::MakeBulkReadPacketWb()
+void
+__attribute__((optimize("O0"))) 
+CM730::MakeBulkReadPacketWb()
 {
 		int number = 0;
 

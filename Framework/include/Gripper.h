@@ -29,19 +29,13 @@ namespace Robot
 		double	_torque;
 		bool	_d_torque;
 		
-		double	_sqz_torque;
-		bool	_isSqueezing;
-		int		_sqz_count;
-		double	_spr_torque;
-		bool	_isSpreading;
-		int		_spr_count;
-
+		int		_mv_count;
+		double	_mv_torque;
+		volatile int		_mv_mode;
+		
 		Gripper(int id);
 		
 		void	Bump();
-
-		void	Squeeze();
-		void	Spread();
 
 	public:
 		static	Gripper* GetRight()		{ return _right; }
@@ -77,12 +71,12 @@ namespace Robot
 		void	MoveToAngle(double angle);
 		void	MoveToAngle(double angle, double torque);
 		
-		bool	IsSqueezing()			{ return _isSqueezing; }
+		bool	IsSqueezing()			{ if (_mv_mode==1) return true; else return false; }
 		void	StartSqueezing(double torque);
 		void	StopSqueezing();
 		double	Squeeze(double torque);
 
-		bool	IsSpreading()			{ return _isSpreading; }
+		bool	IsSpreading()			{ if (_mv_mode==2) return true; else return false; }
 		void	StartSpreading(double torque);
 		void	StopSpreading();
 		double	Spread(double torque);
