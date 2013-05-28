@@ -651,9 +651,7 @@ int CM730::ReadWord(int id, int address, int *pValue, int *error)
 	return result;
 }
 
-int
-__attribute__((optimize("O0"))) 
-CM730::ReadTable(int id, int start_addr, int end_addr, unsigned char *table, int *error)
+int CM730::ReadTable(int id, int start_addr, int end_addr, unsigned char *table, int *error)
 {
 	unsigned char txpacket[MAXNUM_TXPARAM + 10] = {0, };
 	unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };

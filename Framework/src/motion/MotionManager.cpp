@@ -400,9 +400,9 @@ void MotionManager::Process()
 
     if(num_axm > 0)
     {
-//	        std::cout << "Torque SyncWrite Start\n";
+//	        std::cout << "AXM SyncWrite Start\n";
         m_CM730->SyncWrite(AXM::P_CW_COMPLIANCE_SLOPE, AXM::PARAM_BYTES, num_axm, param_axm);
-//	        std::cout << "Torque SyncWrite Complete\n";
+//	        std::cout << "AXM SyncWrite Complete\n";
     }
 
     m_CM730->BulkRead();
@@ -454,6 +454,10 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, MX28::Value2An
 				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_GRIPPER, (tableau[7]&0x00FF) );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_GRIPPER, err );
 			}
+			else
+			{
+			    fprintf(stderr, "Crap. No response from Right Gripper AXM\n");
+			}
 
 		}
 	}
@@ -487,6 +491,10 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, MX28::Value2An
 
 				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_GRIPPER, (tableau[7]&0x00FF) );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_GRIPPER, err );
+			}
+			else
+			{
+			    fprintf(stderr, "Crap. No response from Left Gripper AXM\n");
 			}
 			
 		}
@@ -524,6 +532,10 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, MX28::Value2Angl
 				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_R_WRIST, (tableau[7]&0x00FF) );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_R_WRIST, err );
 			}
+			else
+			{
+			    fprintf(stderr, "Crap. No response from Right Wrist AXM\n");
+			}
 
 		}
 	}
@@ -557,6 +569,10 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, MX28::Value2Angl
 
 				MotionStatus::m_JointStatus.SetTemperature( JointData::ID_L_WRIST, (tableau[7]&0x00FF) );
 				MotionStatus::m_JointStatus.SetErrors( JointData::ID_L_WRIST, err );
+			}
+			else
+			{
+			    fprintf(stderr, "Crap. No response from Left Wrist AXM\n");
 			}
 
 		}
