@@ -11,8 +11,6 @@
 #include "MX28.h"
 #include "MotionManager.h"
 
-#define GRIPPER_EXPERIMENTAL
-
 using namespace Robot;
 
 MotionManager* MotionManager::m_UniqueInstance = new MotionManager();
@@ -62,9 +60,8 @@ bool MotionManager::Initialize(CM730 *cm730)
 			MotionStatus::m_CurrentJoints.SetValue(id, value);
 			MotionStatus::m_CurrentJoints.SetEnable(id, true);
 
-#ifdef CHANGING_TEMPERATURE_LIMIT
+/// Change the default temperature limit to protect the motors
             m_CM730->WriteByte(id, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::CUSTOM_TEMPERATURE_LIMIT, &error);
-#endif
 
 			if(DEBUG_PRINT == true)
 				fprintf(stderr, "[%d] Success\n", value);
@@ -104,9 +101,8 @@ bool MotionManager::Reinitialize()
 			MotionStatus::m_CurrentJoints.SetValue(id, value);
 			MotionStatus::m_CurrentJoints.SetEnable(id, true);
 
-#ifdef CHANGING_TEMPERATURE_LIMIT
+/// Change the default temperature limit to protect the motors
             m_CM730->WriteByte(id, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::CUSTOM_TEMPERATURE_LIMIT, &error);
-#endif
 
 			if(DEBUG_PRINT == true)
 				fprintf(stderr, "[%d] Success\n", value);
@@ -308,10 +304,8 @@ void MotionManager::Process()
                     MotionStatus::m_CurrentJoints.SetIGain(id, (*i)->m_Joint.GetIGain(id));
                     MotionStatus::m_CurrentJoints.SetDGain(id, (*i)->m_Joint.GetDGain(id));
 
-#ifdef GRIPPER_EXPERIMENTAL
-/// Add speed and torque control?
+/// Add 'torque' control
                     MotionStatus::m_CurrentJoints.SetTorqueLim(id, (*i)->m_Joint.GetTorqueLim(id));
-#endif
                 }
             }
         }
@@ -322,11 +316,9 @@ void MotionManager::Process()
     int num_mx = 0;
 
 
-#ifdef GRIPPER_EXPERIMENTAL
     int param_trq[LENGTH_SYNCWRITE_TRQ];
     int n_trq = 0;
     int num_trq = 0;
-#endif
 
     for(int id=JointData::ID_R_SHOULDER_PITCH; id<JointData::NUMBER_OF_JOINTS; id++)
     {
@@ -377,14 +369,12 @@ void MotionManager::Process()
 //	        std::cout << "MX SyncWrite Complete\n";
     }
 
-#ifdef GRIPPER_EXPERIMENTAL
     if(num_trq > 0)
     {
 //	        std::cout << "Torque SyncWrite Start\n";
         m_CM730->SyncWrite(MX28::P_TORQUE_LIMIT_L, 3, num_trq, param_trq);
 //	        std::cout << "Torque SyncWrite Complete\n";
     }
-#endif
 
     m_CM730->BulkRead();
 
@@ -405,7 +395,6 @@ void MotionManager::Process()
     }
 
 #ifdef BOT_HAS_HANDS
-// FUCK YOU!!!!!!!!!!!!!!!!!!!!!!!!!
     if(MotionStatus::m_JointStatus.GetModel(JointData::ID_R_GRIPPER)>0)
     {
         MotionStatus::m_JointStatus.SetSpeedNow( JointData::ID_R_GRIPPER, m_CM730->m_BulkReadData[JointData::ID_R_GRIPPER].ReadWord(MX28::P_PRESENT_SPEED_L) );
