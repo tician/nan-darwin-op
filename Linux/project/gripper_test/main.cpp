@@ -35,10 +35,12 @@ int main(void)
 	MotionManager::GetInstance()->AddModule((MotionModule*)Gripper::GetRight());
 	MotionManager::GetInstance()->AddModule((MotionModule*)Gripper::GetLeft());
     LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
-    motion_timer->Start();
 
 //	std::cout << "My ID is: " << Gripper::GetRight()->GetID() << std::endl;
-//	Gripper::GetRight()->Initialize();
+	Gripper::GetRight()->Initialize();
+	Gripper::GetLeft()->Initialize();
+
+    motion_timer->Start();
 	sleep(5);
 
 	MotionStatus::m_CurrentJoints.SetEnableBody(false);
