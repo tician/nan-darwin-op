@@ -386,7 +386,9 @@ unsigned char CM730::CalculateChecksum(unsigned char *packet)
 	return (~checksum);
 }
 
-void CM730::MakeBulkReadPacket()
+void
+__attribute__((optimize("O0"))) 
+CM730::MakeBulkReadPacket()
 {
     int number = 0;
 
@@ -488,9 +490,7 @@ void CM730::MakeBulkReadPacket()
 }
 
 int
-//#ifdef PREVENT_CM730_OPTIMIZATIONS
 __attribute__((optimize("O0"))) 
-//#endif
 CM730::BulkRead()
 {
     unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };
@@ -651,7 +651,9 @@ int CM730::ReadWord(int id, int address, int *pValue, int *error)
 	return result;
 }
 
-int CM730::ReadTable(int id, int start_addr, int end_addr, unsigned char *table, int *error)
+int
+__attribute__((optimize("O0"))) 
+CM730::ReadTable(int id, int start_addr, int end_addr, unsigned char *table, int *error)
 {
 	unsigned char txpacket[MAXNUM_TXPARAM + 10] = {0, };
 	unsigned char rxpacket[MAXNUM_RXPARAM + 10] = {0, };

@@ -50,6 +50,7 @@ namespace Robot
 		double GetCurrentAngle()		{ return _current; }
 		double GetTorqueLimit()			{ return _torque; }
 		
+		double GetAngleNow();
 		double GetTorqueNow();
 		double GetSpeedNow();
 

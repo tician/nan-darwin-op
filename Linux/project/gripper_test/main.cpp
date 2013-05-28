@@ -33,15 +33,17 @@ int main(void)
 			return 0;
 	}
 	MotionManager::GetInstance()->AddModule((MotionModule*)Gripper::GetRight());
+	MotionManager::GetInstance()->AddModule((MotionModule*)Gripper::GetLeft());
     LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
     motion_timer->Start();
 
-	std::cout << "My ID is: " << Gripper::GetRight()->GetID() << std::endl;
-	Gripper::GetRight()->Initialize();
+//	std::cout << "My ID is: " << Gripper::GetRight()->GetID() << std::endl;
+//	Gripper::GetRight()->Initialize();
 	sleep(5);
 
 	MotionStatus::m_CurrentJoints.SetEnableBody(false);
 	MotionStatus::m_CurrentJoints.SetEnable(JointData::ID_R_GRIPPER, true);
+	MotionStatus::m_CurrentJoints.SetEnable(JointData::ID_L_GRIPPER, true);
 	MotionManager::GetInstance()->SetEnable(true);
 	/////////////////////////////////////////////////////////////////////
 
@@ -50,11 +52,23 @@ int main(void)
 
 	Gripper::GetRight()->m_Joint.SetPGain(JointData::ID_R_GRIPPER, 8);
 
+	Gripper::GetLeft()->m_Joint.SetEnableBody(false);
+	Gripper::GetLeft()->m_Joint.SetEnable(JointData::ID_L_GRIPPER, true);
+
     while(1)
     {
 		Gripper::GetRight()->Squeeze(0.2);
+		std::cout << "Present angle (R): " << Gripper::GetRight()->GetAngleNow() << std::endl;
 		sleep(5);
 		Gripper::GetRight()->Spread(0.3);
+		std::cout << "Present angle (R): " << Gripper::GetRight()->GetAngleNow() << std::endl;
+		sleep(5);
+		
+		Gripper::GetLeft()->Squeeze(0.2);
+		std::cout << "Present angle (L): " << Gripper::GetLeft()->GetAngleNow() << std::endl;
+		sleep(5);
+		Gripper::GetLeft()->Spread(0.3);
+		std::cout << "Present angle (L): " << Gripper::GetLeft()->GetAngleNow() << std::endl;
 		sleep(5);
     }
 

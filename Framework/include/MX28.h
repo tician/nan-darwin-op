@@ -15,6 +15,7 @@ namespace Robot
 	class MX28
 	{
 	public:
+		static const int CUSTOM_TEMPERATURE_LIMIT;
 		static const int MIN_VALUE;
 #ifdef MX28_1024
         static const int CENTER_VALUE;

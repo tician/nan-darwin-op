@@ -8,6 +8,7 @@
 
 using namespace Robot;
 
+const int MX28::CUSTOM_TEMPERATURE_LIMIT = 55;
 const int MX28::MIN_VALUE = 0;
 
 #ifdef MX28_1024

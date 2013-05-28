@@ -94,6 +94,11 @@ void Gripper::SaveINISettings(minIni* ini, const std::string &section)
 	ini->put(section,	"neutral_position",	_neutral);
 }
 
+double Gripper::GetAngleNow()
+{
+	return MotionStatus::m_JointStatus.GetAngleNow(_id);
+}
+
 double Gripper::GetTorqueNow()
 {
 	int tempy = MotionStatus::m_JointStatus.GetTorqueNow(_id);
