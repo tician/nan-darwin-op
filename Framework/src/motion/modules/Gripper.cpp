@@ -20,6 +20,10 @@ Gripper::Gripper(int id)
 , _current(0.0)
 , _torque(0.25)
 , _d_torque(false)
+, _sqz_torque(0.2)
+, _isSqueezing(false)
+, _spr_torque(0.2)
+, _isSpreading(false)
 {
 	if (id > 20)
 	{
@@ -218,38 +222,63 @@ void Gripper::MoveToAngle(double angle, double torque)
 	Bump();
 }
 
+double Gripper::StartSqueezing(double torque)
+{
+	_sqz_torque = torque;
+	_sqz_count = 0;
+	
+	_isSqueezing = true;
+}
+
+double Gripper::StopSqueezing()
+{
+	_sqz_count = 0;
+	_isSqueezing = false;
+}
+
 double Gripper::Squeeze(double torque)
 {
-	int overTorque = 0;
 	double tor = this->GetTorqueNow();
 	double torlim = (torque*1.0);
 	double tormov = (torque*1.2);
 	double Astart=0.0;
-	while ( (overTorque<10) && (_current<_closedLimit) )
+//	while ( (_sqz_count<10) && (_current<_closedLimit) )
+	if ( (_sqz_count<10) && (_current<_closedLimit) )
 	{
 		MoveToAngle(_current+1.0, tormov);
 		tor = this->GetTorqueNow();
 		fprintf(stderr, "\'Load\': %0.2f\n", tor);
 		if (tor > torlim)
 		{
-			if (overTorque==0)
+			if (_sqz_count==0)
 			{
 				Astart = _current;
 			}
-			overTorque++;
+			_sqz_count++;
 		}
 		else
-			overTorque = 0;
+			_sqz_count = 0;
 
-		usleep(50000);
+//		usleep(50000);
 	}
-	if (overTorque>0)
+	if (_sqz_count>=10)
 		_current = (Astart+1.0);
 	MoveToAngle(_current, torque);
 	tor = this->GetTorqueNow();
 	
 	fprintf(stderr, "Stopped squeezing at %0.2f[d] and %0.2f[PWM]\n", _current, tor);
 	return _current;
+}
+
+double Gripper::StartSpreading(double torque)
+{
+	_isSpreading = true;
+	_spr_torque = torque;
+}
+
+double Gripper::StopSpreading()
+{
+	_isSpreading = false;
 }
 
 double Gripper::Spread(double torque)

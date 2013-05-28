@@ -28,6 +28,11 @@ namespace Robot
 		
 		double _torque;
 		bool _d_torque;
+		
+		double _sqz_torque;
+		bool _isSqueezing;
+		double _spr_torque;
+		bool _isSpreading;
 
 		Gripper(int id);
 		

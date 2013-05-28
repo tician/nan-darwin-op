@@ -453,7 +453,7 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_GRIPPER, MX28::Value2An
 			}
 			else
 			{
-			    fprintf(stderr, "Crap. No response from Right Gripper AXM\n");
+//			    fprintf(stderr, "Crap. No response from Right Gripper AXM\n");
 			}
 
 		}
@@ -488,7 +488,7 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_L_GRIPPER, MX28::Value2An
 			}
 			else
 			{
-			    fprintf(stderr, "Crap. No response from Left Gripper AXM\n");
+//			    fprintf(stderr, "Crap. No response from Left Gripper AXM\n");
 			}
 			
 		}
@@ -525,7 +525,7 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, MX28::Value2Angl
 			}
 			else
 			{
-			    fprintf(stderr, "Crap. No response from Right Wrist AXM\n");
+//			    fprintf(stderr, "Crap. No response from Right Wrist AXM\n");
 			}
 
 		}
@@ -560,7 +560,7 @@ MotionStatus::m_JointStatus.SetAngleNow( JointData::ID_R_WRIST, MX28::Value2Angl
 			}
 			else
 			{
-			    fprintf(stderr, "Crap. No response from Left Wrist AXM\n");
+//			    fprintf(stderr, "Crap. No response from Left Wrist AXM\n");
 			}
 
 		}

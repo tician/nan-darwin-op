@@ -61,17 +61,16 @@ int main(void)
     {
 		Gripper::GetRight()->Squeeze(0.2);
 		std::cout << "Present angle (R): " << Gripper::GetRight()->GetAngleNow() << std::endl;
-		sleep(5);
-		Gripper::GetRight()->Spread(0.3);
-		std::cout << "Present angle (R): " << Gripper::GetRight()->GetAngleNow() << std::endl;
-		sleep(5);
-		
 		Gripper::GetLeft()->Squeeze(0.2);
 		std::cout << "Present angle (L): " << Gripper::GetLeft()->GetAngleNow() << std::endl;
 		sleep(5);
+
+		Gripper::GetRight()->Spread(0.3);
+		std::cout << "Present angle (R): " << Gripper::GetRight()->GetAngleNow() << std::endl;
 		Gripper::GetLeft()->Spread(0.3);
 		std::cout << "Present angle (L): " << Gripper::GetLeft()->GetAngleNow() << std::endl;
 		sleep(5);
+		
     }
 
     return 0;
