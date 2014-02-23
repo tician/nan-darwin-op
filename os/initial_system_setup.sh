@@ -9,6 +9,9 @@ apt-get install --no-install-recommends g++ make libjpeg8-dev libncurses5-dev ma
 
 #exit
 
+# Keep the nosy out of the sudo home
+chmod 0750 /home/$USER
+
 # Create non-superuser to avoid future software issues.
 adduser darwin
 
@@ -18,6 +21,7 @@ mkdir /darwin
 # Install TellDarwin and DARwIn-OP framework and most up-to-date configs
 git clone git://github.com/tician/nan-darwin-op.git /home/darwin/src/nan-darwin-op
 rsync -av /home/darwin/src/nan-darwin-op/ /darwin
+chown -R darwin:darwin /home/darwin
 
 chown -R darwin:darwin /darwin
 
