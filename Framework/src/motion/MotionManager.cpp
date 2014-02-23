@@ -65,8 +65,6 @@ bool MotionManager::Initialize(CM730 *cm730)
 /// Change the default temperature limit to protect the motors
             m_CM730->WriteByte(id, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::CUSTOM_TEMPERATURE_LIMIT, &error);
 
-            m_CM730->MakeBulkReadPacket();
-
 			if(DEBUG_PRINT == true)
 				fprintf(stderr, "[%d] Success\n", value);
 		}
@@ -78,6 +76,8 @@ bool MotionManager::Initialize(CM730 *cm730)
 				fprintf(stderr, " Fail\n");
 		}
 	}
+
+	m_CM730->MakeBulkReadPacket();
 
 	CheckServoExistance();
 
@@ -108,8 +108,6 @@ bool MotionManager::Reinitialize()
 /// Change the default temperature limit to protect the motors
             m_CM730->WriteByte(id, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::CUSTOM_TEMPERATURE_LIMIT, &error);
 
-            m_CM730->MakeBulkReadPacket();
-
 			if(DEBUG_PRINT == true)
 				fprintf(stderr, "[%d] Success\n", value);
 		}
@@ -121,6 +119,8 @@ bool MotionManager::Reinitialize()
 				fprintf(stderr, " Fail\n");
 		}
 	}
+
+	m_CM730->MakeBulkReadPacket();
 
 	CheckServoExistance();
 

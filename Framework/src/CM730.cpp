@@ -489,6 +489,14 @@ CM730::MakeBulkReadPacket()
     }
 
     m_BulkReadTxPacket[LENGTH]          = (number * 3) + 3;
+
+	if(DEBUG_PRINT == true)
+	{
+		fprintf(stderr, "\nBulkPacketTx: ");
+		for(int n=0; n<m_BulkReadTxPacket[LENGTH]; n++)
+			fprintf(stderr, "%.2X ", m_BulkReadTxPacket[n]);
+		fprintf(stderr, "\n");
+	}
 }
 
 int

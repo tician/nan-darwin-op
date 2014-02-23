@@ -57,7 +57,10 @@ bool LinuxCM730::OpenPort()
 		printf("\n%s open ", m_PortName);
 	
     if((m_Socket_fd = open(m_PortName, O_RDWR|O_NOCTTY|O_NONBLOCK)) < 0)
+    {
+        printf("failed to open: %s\n", m_PortName);
         goto UART_OPEN_ERROR;
+    }
 
 	if(DEBUG_PRINT == true)
 		printf("success!\n");
@@ -77,7 +80,11 @@ bool LinuxCM730::OpenPort()
 
 	// Set non-standard baudrate
     if(ioctl(m_Socket_fd, TIOCGSERIAL, &serinfo) < 0)
+    {
+		printf("failed to set non-standard baudrate.\n");
 		goto UART_OPEN_ERROR;
+	}
+	
 
     serinfo.flags &= ~ASYNC_SPD_MASK;
     serinfo.flags |= ASYNC_SPD_CUST;
