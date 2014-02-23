@@ -1,0 +1,7 @@
+#!/bin/sh
+
+SECUNDUS=$(cat /proc/uptime | sed -e 's/ [0-9]*.*//g')
+HORUS=$(echo "scale=2; ""$SECUNDUS""/3600" | bc)
+
+#printf "Haven't slept in %s hours..." "$HORUS"
+echo "Beware, I've not slept in $HORUS hours..." > /etc/motd.tail

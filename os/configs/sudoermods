@@ -1,0 +1,7 @@
+%shutdown ALL=(root) PASSWD: /sbin/shutdown
+%shutdown ALL=(root) PASSWD: /sbin/poweroff
+%shutdown ALL=(root) PASSWD: /sbin/reboot
+
+%nmusers ALL=(root) PASSWD: /usr/bin/nm-connection-editor
+%nmusers ALL=(root) PASSWD: /usr/bin/nmcli
+
