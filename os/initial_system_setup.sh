@@ -17,6 +17,11 @@ echo "@$USER    soft    rtpio    32" >> /etc/security/limits.conf
 # Keep the nosy out of the sudo home
 chmod 0750 /home/$USER
 
+#CM730_FTDI_ID=$(lsusb -v -d 0403:6001 | grep iSerial | sed 's/ iSerial * [0-9] * //g')
+CM730_FTDI_ID=$(udevadm info -a -n /dev/ttyUSB0 | grep '{serial}' | head -n1 | sed 's/ //g')
+CM730_UDEV=$(echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6001\", $CM730_FTDI_ID, SYMLINK+=\"ttyCM730\"")
+echo "$CM730_UDEV" >> /etc/udev/rules.d/99-usb-serial.rules
+
 # Create non-superuser to avoid future software issues.
 adduser darwin
 
