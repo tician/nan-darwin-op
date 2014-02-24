@@ -34,9 +34,11 @@ mkdir /home/$SUDO_USER/src
 
 # Install TellDarwin and DARwIn-OP framework and most up-to-date configs
 git clone git://github.com/tician/nan-darwin-op.git /home/$SUDO_USER/src/nan-darwin-op
+chown -R $SUDO_USER:$SUDO_USER /home/$SUDO_USER/src
+chmod -R go+rw /home/$SUDO_USER/src
 rsync -av /home/$SUDO_USER/src/nan-darwin-op/ /darwin
 chown -R darwin:darwin /darwin
-chmod -R go+rw /darwin
+#chmod -R go+rw /darwin
 
 # Update .bashrc with color and firmware message
 cp -f /darwin/os/configs/.bashrc /home/$SUDO_USER/.bashrc
