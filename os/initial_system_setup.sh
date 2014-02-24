@@ -4,10 +4,15 @@ apt-get update
 apt-get upgrade
 
 # Install missing software
-apt-get install --no-install-recommends g++ make libjpeg8-dev libncurses5-dev madplay vorbis-tools libasound2-dev openssh-blacklist openssh-blacklist-extra network-manager-gnome xvfb fluxbox x11vnc espeak pulseaudio bc git-core rsync
+apt-get install --no-install-recommends g++ make libjpeg8-dev libncurses5-dev mpg321 vorbis-tools libasound2-dev openssh-blacklist openssh-blacklist-extra network-manager-gnome xvfb fluxbox x11vnc espeak pulseaudio bc git-core rsync
 # alsa-base alsa-utils
 
 #exit
+
+echo "@$USER    hard    rtpio    32" >> /etc/security/limits.conf
+echo "@$USER    soft    rtpio    32" >> /etc/security/limits.conf
+#echo "@$USER    hard    nice     0" >> /etc/security/limits.conf
+#echo "@$USER    soft    nice     0" >> /etc/security/limits.conf
 
 # Keep the nosy out of the sudo home
 chmod 0750 /home/$USER

@@ -55,6 +55,11 @@ void LinuxMotionTimer::Start(void)
     if(error != 0)
         printf("error = %d\n",error);
 
+//    int rtprio_min = sched_get_priority_min(SCHED_RR);
+//    int rtprio_max = sched_get_priority_max(SCHED_RR);
+//    printf("SCHED_RR limits: %d %d \n", rtprio_min, rtprio_max);
+//    param.sched_priority = rtprio_max;
+
     memset(&param, 0, sizeof(param));
     param.sched_priority = 31;// RT
     error = pthread_attr_setschedparam(&attr, &param);
@@ -63,7 +68,10 @@ void LinuxMotionTimer::Start(void)
 
     // create and start the thread
     if((error = pthread_create(&this->m_Thread, &attr, this->TimerProc, this))!= 0)
+    {
+    	printf("failed to create thread. error = %d\n",error);
         exit(-1);
+    }
 
     this->m_TimerRunning=true;
 

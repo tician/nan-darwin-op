@@ -492,10 +492,15 @@ CM730::MakeBulkReadPacket()
 
 	if(DEBUG_PRINT == true)
 	{
+		int length = m_BulkReadTxPacket[LENGTH] + 4;
+
+		m_BulkReadTxPacket[0] = 0xFF;
+		m_BulkReadTxPacket[1] = 0xFF;
+		m_BulkReadTxPacket[length - 1] = CalculateChecksum(m_BulkReadTxPacket);
 		fprintf(stderr, "\nBulkPacketTx: ");
-		for(int n=0; n<m_BulkReadTxPacket[LENGTH]; n++)
+		for(int n=0; n<length; n++)
 			fprintf(stderr, "%.2X ", m_BulkReadTxPacket[n]);
-		fprintf(stderr, "\n");
+		fprintf(stderr, "\n\n");
 	}
 }
 
