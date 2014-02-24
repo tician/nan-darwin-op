@@ -27,8 +27,8 @@
 #define INI_FILE_PATH       "../../../Data/config.ini"
 #define SCRIPT_FILE_PATH    "script.asc"
 
-#define U2D_DEV_NAME0       "/dev/ttyUSB0"
-#define U2D_DEV_NAME1       "/dev/ttyUSB1"
+#define U2D_DEV_NAME0       "/dev/ttyCM730"
+#define U2D_DEV_NAME1       "/dev/ttyUSB0"
 
 LinuxCM730 linux_cm730(U2D_DEV_NAME0);
 CM730 cm730(&linux_cm730);
@@ -46,15 +46,15 @@ void change_current_dir()
 void sighandler(int sig)
 {
 	if (sig == SIGABRT)
-		fprintf(stdout, "Process Killed: Aborted.\n");
+		fprintf(stdout, "\n\nProcess Killed: Aborted.\n");
 	if (sig == SIGTERM)
-		fprintf(stdout, "Process Killed: Terminated.\n");
+		fprintf(stdout, "\n\nProcess Killed: Terminated.\n");
 	if (sig == SIGQUIT)
-		fprintf(stdout, "Process Killed: Quit.\n");
+		fprintf(stdout, "\n\nProcess Killed: Quit.\n");
 	if (sig == SIGINT)
-		fprintf(stdout, "Process Killed: Interrupted.\n");
+		fprintf(stdout, "\n\nProcess Killed: Interrupted.\n");
 	if (sig == SIGSEGV)
-		fprintf(stdout, "Process Killed: Segfault.\n");
+		fprintf(stdout, "\n\nProcess Killed: Segfault.\n");
 
     exit(0);
 }

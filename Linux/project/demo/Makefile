@@ -12,8 +12,8 @@ TARGET = demo
 INCLUDE_DIRS = -I../../include -I../../../Framework/include
 
 CXX = g++
-CXXFLAGS += -O2 -DLINUX -Wall $(INCLUDE_DIRS)
-#CXXFLAGS += -O2 -DDEBUG -DLINUX -Wall $(INCLUDE_DIRS)
+CXXFLAGS += -O2 -pedantic -DLINUX -Wall $(INCLUDE_DIRS)
+#CXXFLAGS += -O2 -DDEBUG -pedantic -DLINUX -Wall $(INCLUDE_DIRS)
 LFLAGS += -lpthread -ljpeg -lrt
 
 OBJECTS = VisionMode.o StatusCheck.o main.o
