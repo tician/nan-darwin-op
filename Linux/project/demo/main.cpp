@@ -45,6 +45,17 @@ void change_current_dir()
 
 void sighandler(int sig)
 {
+	if (sig == SIGABRT)
+		fprintf(stdout, "Process Killed: Aborted.\n");
+	if (sig == SIGTERM)
+		fprintf(stdout, "Process Killed: Terminated.\n");
+	if (sig == SIGQUIT)
+		fprintf(stdout, "Process Killed: Quit.\n");
+	if (sig == SIGINT)
+		fprintf(stdout, "Process Killed: Interrupted.\n");
+	if (sig == SIGSEGV)
+		fprintf(stdout, "Process Killed: Segfault.\n");
+
     exit(0);
 }
 
@@ -54,6 +65,7 @@ int main(void)
     signal(SIGTERM, &sighandler);
     signal(SIGQUIT, &sighandler);
     signal(SIGINT, &sighandler);
+    signal(SIGSEGV, &sighandler);
 
     change_current_dir();
 

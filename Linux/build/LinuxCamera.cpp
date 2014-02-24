@@ -385,7 +385,12 @@ int LinuxCamera::ReadFrame()
 
     //process_image (buffers[buf.index].start);
     for(int i = 0; i < fbuffer->m_YUVFrame->m_ImageSize; i++)
+    {
+        if (i >= buffers[buf.index].length)		// WTF!? Why break now?
+            break;
+
         fbuffer->m_YUVFrame->m_ImageData[i] = ((unsigned char*)buffers[buf.index].start)[i];
+    }
     ImgProcess::HFlipYUV(fbuffer->m_YUVFrame);
     ImgProcess::VFlipYUV(fbuffer->m_YUVFrame);
     ImgProcess::YUVtoRGB(fbuffer);
