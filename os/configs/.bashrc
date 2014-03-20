@@ -129,7 +129,8 @@ the 'darwin' user with the fluxbox window manager.  Fluxbox is lightweight and
 gives access to the NetworkManager gui interface.  Open a terminal in
 Fluxbox and type 'sudo nm-connection-editor' to create and delete connections.
   Nothing else is needed, so do not mess with anything else.
-    If things somehow break, see: /darwwin/os/Connecting_To_Networks
+    If you need to activate a network connection, or things somehow break,
+      then see: /darwwin/os/Connecting_To_Networks
 "
 
 
