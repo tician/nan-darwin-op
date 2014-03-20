@@ -117,7 +117,7 @@ int main(void)
     MotionManager::GetInstance()->AddModule((MotionModule*)Walking::GetInstance());
 
     LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
-    motion_timer->Start();
+//    motion_timer->Start();
     /////////////////////////////////////////////////////////////////////
     
     MotionManager::GetInstance()->LoadINISettings(ini);
@@ -158,6 +158,9 @@ int main(void)
     cm730.WriteByte(CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
 
     LinuxActionScript::PlayMP3("../../../Data/mp3/Demonstration ready mode.mp3");
+
+    motion_timer->Start();
+
     Action::GetInstance()->Start(15);
     while(Action::GetInstance()->IsRunning()) usleep(8*1000);
 

@@ -1,4 +1,16 @@
 #! /bin/sh
 
+### BEGIN INIT INFO
+# Provides: darwin-shutdown
+# Required-Start: $local_fs $remote_fs
+# Required-Stop:
+# X-Start-Before:
+# Default-Start: 0 1 2 3 4 5 6
+# Default-Stop:
+# Short-Description: Adds shutdown sounds
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
 /darwin/os/shutdown-sound
 

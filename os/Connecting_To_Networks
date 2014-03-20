@@ -1,29 +1,70 @@
-It is very likely you will want to connect to a wireless network.  If you 
-want to use NetworkManager, then run the 'x11vnc.sh' script on the
-DARwIn-OP.  On a different computer connected to the DARwIn-OP via ethernet
-cable, execute the two commands listed later in the init script.
-This will open up a fluxbox session where you can use the nm-connection-editor
-GUI to create as many connections as you want easily and hopefully without
-interference between network devices (there have been a few times where the 
-DARwIn-OP would get stuck during boot waiting for a network connection).
-Right-click anywhere to open the menu and select 'Applications->Terminal
-Emulators->Xterm' to open a terminal and run 'nm-connection-editor'.
+################################################################################
+Assuming you have not borked the video output again, all you need to do is open
+the NetworkManager Connection Editor GUI.  'darwin' should automatically login,
+so you will simply see a fluxbox session on the monitor.  Right-click anywhere
+on the screen and left-click on "Open Up A Terminal" at the top of the pop-up
+menu.  In the new terminal window that appears, type 'sudo nm-connection-editor'
+and use that to add/delete/modify any connections.
 
+################################################################################
+Alternatively, you can remotely access the desktop using a VNC client such as
+vinagre or vncviewer.  
+
+xvncviewer -via darwin@DARWINHOST localhost:0
+OR
+vinagre (GUI) (!!!not working!!!)
+	Protocol:	VNC
+	Host:		localhost:0
+	[x] Use host | darwin@DARWINHOST | as a SSH tunnel
+
+
+################################################################################
+If you have borked video output, then vino-server is probably not working
+correctly and you will have to remotely access the desktop using the auxiliary
+vncserver.
+
+
+################################################################################
 After a connection has been created with the gui, connecting with the
-command-line tool is simply:
->sudo nmcli con list
-which will output all available and existing connections.
-To connect, enter:
->sudo nmcli con up id CONNECTION_ID
-where CONNECTION_ID is the name of the connection to use.
+command-line tool is simply: 'sudo nmcli con list' which will output all
+available and existing connections.
+To connect, enter: 'sudo nmcli con up id CONNECTION_ID', where CONNECTION_ID
+is the name of the connection to use.
 
 nm-tools and nmcli will produce errors if used over ssh without being
 preceeded by 'sudo'.
 
 
-All else fails, use the above gui method to disable autoconnection for
-each connection on the device.  This should allow
-'/etc/network/interfaces' to override Network Manager's access to
-the device (will probably cause problems with not being able to use
-two interfaces eth0 and wlan0 simultaneously, if you do not already
-have that problem).
+################################################################################
+################################################################################
+################################################################################
+                        !!!!Absolute Last Resort!!!!
+Log into darwin@DARWINHOST with ssh, then run 'vncserver :5 -geometry 800x600 -ac'
+on the darwin.  Open up any VNC-Viewer and enter the DARWINHOST IP address.
+You may be prompted for a single password to connect: 'fuckoff'.
+This method is completely unencrypted after the password is sent and must be
+not be used on a public network.  Immediately after completing your network
+configuration, either reboot the darwin or run 'vncserver -kill :5' to destroy
+the absolutely horrific security hole this method creates.
+
+
+
+################################################################################
+					!!!!MORE COMPLICATED LAST RESORT!!!
+Using x11vnc and a fake framebuffer.  Run '/darwin/os/x11vnc.sh' on the DARwIn-OP.
+On a separate computer connected to the DARwIn-OP via ethernet cable, open two
+separate terminal windows.
+In the first, run 'ssh -N -T -L 5900:localhost:5900 darwin@DARWINHOST', where
+DARWINHOST is the IP address of the DARwIn-OP.  It will shortly prompt for the
+password for darwin, and after entered correctly will do very little.
+In the second, run 'vncviewer -encodings 'copyrect tight hextile' localhost:5900'.
+If the DARwIn-OP was set up correctly and the previous terminal running ssh
+connected correctly, then a window should pop up with a view of the DARwIn-OP
+desktop.
+From here, you can follow the directions above to use the nm-connection-editor
+GUI to create as many connections as you want.
+
+
+
+
+

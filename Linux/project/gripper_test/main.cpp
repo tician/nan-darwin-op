@@ -17,8 +17,30 @@ void change_current_dir()
         chdir(dirname(exepath));
 }
 
+void sighandler(int sig)
+{
+	if (sig == SIGABRT)
+		fprintf(stdout, "\n\nProcess Killed: Aborted.\n");
+	if (sig == SIGTERM)
+		fprintf(stdout, "\n\nProcess Killed: Terminated.\n");
+	if (sig == SIGQUIT)
+		fprintf(stdout, "\n\nProcess Killed: Quit.\n");
+	if (sig == SIGINT)
+		fprintf(stdout, "\n\nProcess Killed: Interrupted.\n");
+	if (sig == SIGSEGV)
+		fprintf(stdout, "\n\nProcess Killed: Segfault.\n");
+
+    exit(0);
+}
+
 int main(void)
 {
+    signal(SIGABRT, &sighandler);
+    signal(SIGTERM, &sighandler);
+    signal(SIGQUIT, &sighandler);
+    signal(SIGINT, &sighandler);
+    signal(SIGSEGV, &sighandler);
+
     printf( "\n===== Gripper Class Test for DARwIn =====\n\n");
 
     change_current_dir();
@@ -40,13 +62,13 @@ int main(void)
 	Gripper::GetRight()->Initialize();
 	Gripper::GetLeft()->Initialize();
 
-    motion_timer->Start();
-	sleep(5);
-
 	MotionStatus::m_CurrentJoints.SetEnableBody(false);
 	MotionStatus::m_CurrentJoints.SetEnable(JointData::ID_R_GRIPPER, true);
 	MotionStatus::m_CurrentJoints.SetEnable(JointData::ID_L_GRIPPER, true);
 	MotionManager::GetInstance()->SetEnable(true);
+
+    motion_timer->Start();
+	sleep(5);
 	/////////////////////////////////////////////////////////////////////
 
 //	Gripper::GetRight()->m_Joint.SetEnableBody(false);

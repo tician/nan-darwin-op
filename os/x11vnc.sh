@@ -2,13 +2,13 @@
 
 #need to install network-manager xvfb fluxbox x11vnc on darwin
 
-killall fluxbox
+#killall fluxbox
 
-export DISPLAY=:1
-Xvfb :1 -screen 0 800x600x24 &
-fluxbox &
-sleep 10s
-x11vnc -display :1 -bg -nopw -listen localhost -xkb
+#export DISPLAY=:1
+#Xvfb :1 -screen 0 800x600x24 &
+#fluxbox &
+#sleep 10s
+#x11vnc -display :1 -bg -nopw -listen localhost -xkb
 
 
 

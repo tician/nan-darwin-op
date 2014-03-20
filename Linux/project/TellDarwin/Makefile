@@ -48,6 +48,11 @@ OBJECTS = main.o \
 
 all: darwin.a $(TARGET)
 
+libclean:
+	make -C ../../build clean
+
+distclean: clean libclean
+
 darwin.a:
 	make -C ../../build
 

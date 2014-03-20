@@ -69,13 +69,13 @@ fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+#case "$TERM" in
+#xterm*|rxvt*)
+#    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+#    ;;
+#*)
+#    ;;
+#esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -117,6 +117,19 @@ fi
 
 export EDITOR='nano'
 
-echo -e "\n!!! DO NOT RUN THE FIRMWARE_INSTALLER PROGRAM ON THE SERVOS !!!"
-echo -e "Several servos will lose their calibration settings and possibly"
-echo -e "damage themselves.  Fortunately, you should never need to run it.\n"
+echo "
+!!! DO NOT RUN THE FIRMWARE_INSTALLER PROGRAM ON THE SERVOS !!!
+Several servos will lose their calibration settings and possibly
+damage themselves.  Fortunately, you should never need to run it.
+
+  Do not try to install anything as darwin's 'sudo' access has been revoked.
+If you want to use a monitor, you MUST connect it before the robot starts
+booting.  There is already a desktop installed, and it automatically logs into
+the 'darwin' user with the fluxbox window manager.  Fluxbox is lightweight and
+gives access to the NetworkManager gui interface.  Open a terminal in
+Fluxbox and type 'sudo nm-connection-editor' to create and delete connections.
+  Nothing else is needed, so do not mess with anything else.
+    If things somehow break, see: /darwwin/os/Connecting_To_Networks
+"
+
+
