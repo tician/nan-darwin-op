@@ -38,10 +38,10 @@ echo "$CM730_UDEV" >> /etc/udev/rules.d/99-usb-serial.rules
 # Enable darwin and SUDO_USER to use real-time threads
 LIMITS_CONF=$(cat /etc/security/limits.conf | sed 's/# End of file//g')
 echo "$LIMITS_CONF" > /etc/security/limits.conf
-echo "@darwin    hard    rtpio    unlimited" >> /etc/security/limits.conf
-echo "@$SUDO_USER    hard    rtpio    unlimited" >> /etc/security/limits.conf
-echo "@darwin    soft    rtpio    32" >> /etc/security/limits.conf
-echo "@$SUDO_USER    soft    rtpio    32" >> /etc/security/limits.conf
+echo "@darwin    hard    rtprio    unlimited" >> /etc/security/limits.conf
+echo "@$SUDO_USER    hard    rtprio    unlimited" >> /etc/security/limits.conf
+echo "@darwin    soft    rtprio    32" >> /etc/security/limits.conf
+echo "@$SUDO_USER    soft    rtprio    32" >> /etc/security/limits.conf
 
 echo "@darwin    hard    nice     0" >> /etc/security/limits.conf
 echo "@$SUDO_USER    hard    nice     0" >> /etc/security/limits.conf
